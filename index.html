@@ -950,7 +950,7 @@
 <body>
 
 <header>
-  <div class="header-tag">// SURVIVAL HORROR DATABASE //</div>
+  <div class="header-tag">//RE2 DATABASE //</div>
   <h1>RESIDENT EVIL 2<br><span>ACHIEVEMENT GUIDE</span></h1>
   <div class="header-sub">44 ACHIEVEMENTS · ALL SCENARIOS · ALL COLLECTIBLES</div>
   <div class="progress-bar-wrap">
@@ -963,7 +963,7 @@
 
 <div class="steam-bar" id="steamBar">
   <span class="steam-label">🎮 STEAM SYNC</span>
-  <input class="steam-input" id="steamInput" type="text" placeholder="Steam vanity URL or 64-bit Steam ID" />
+  <input class="steam-input" id="steamInput" type="text" placeholder="belleke  or  76561198393944242  or full Steam URL" />
   <button class="steam-btn" id="steamSyncBtn" onclick="syncSteam()">SYNC ACHIEVEMENTS</button>
   <span class="steam-status" id="steamStatus"></span>
   <div class="steam-profile" id="steamProfile" style="display:none">
@@ -976,7 +976,7 @@
 <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 32px;">
   <div class="steam-help">
     ⚠ Your Steam profile must be set to <strong style="color:var(--text)">Public</strong> for syncing to work. &nbsp;·&nbsp;
-    Enter your <strong style="color:var(--text)">vanity URL</strong> (e.g. <em>emmaoudhof</em> from steamcommunity.com/id/<em>emmaoudhof</em>) or your
+    Enter your <strong style="color:var(--text)">vanity URL</strong> (e.g. <em>belleke</em> from steamcommunity.com/id/<em>belleke</em>) or your
     <strong style="color:var(--text)">64-bit Steam ID</strong> (find it at <a href="https://steamid.io" target="_blank">steamid.io</a>). &nbsp;·&nbsp;
     To set profile public: <strong style="color:var(--text)">Steam → Profile → Edit Profile → Privacy Settings → Game Details → Public</strong>
   </div>
@@ -1589,8 +1589,17 @@ async function fetchWithProxy(targetUrl) {
 }
 
 async function syncSteam() {
-  const input = document.getElementById('steamInput').value.trim();
+  let input = document.getElementById('steamInput').value.trim();
   if (!input) { setStatus('error', '✕ Please enter a Steam vanity URL or Steam ID'); return; }
+
+  // Auto-strip full URLs — accept both:
+  // https://steamcommunity.com/id/belleke/  → belleke
+  // https://steamcommunity.com/profiles/76561198393944242/ → 76561198393944242
+  if (input.includes('steamcommunity.com/id/')) {
+    input = input.split('steamcommunity.com/id/')[1].replace(/\//g, '').trim();
+  } else if (input.includes('steamcommunity.com/profiles/')) {
+    input = input.split('steamcommunity.com/profiles/')[1].replace(/\//g, '').trim();
+  }
 
   const btn = document.getElementById('steamSyncBtn');
   btn.disabled = true;
@@ -1668,11 +1677,30 @@ async function syncSteam() {
 }
 
 async function resolveVanityUrl(vanity) {
-  try {
-    const text = await fetchWithProxy(`https://steamcommunity.com/id/${vanity}/?xml=1`);
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
-    return xml.querySelector('steamID64')?.textContent || null;
-  } catch { return null; }
+  // Try all proxies for the vanity URL profile XML
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    try {
+      setStatus('loading', `⟳ RESOLVING PROFILE (proxy ${i+1}/${CORS_PROXIES.length})...`);
+      const targetUrl = `https://steamcommunity.com/id/${vanity}/?xml=1`;
+      const proxyUrl = CORS_PROXIES[i](targetUrl);
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      let text;
+      if (proxyUrl.includes('allorigins')) {
+        const json = await res.json();
+        text = json.contents;
+      } else {
+        text = await res.text();
+      }
+      const xml = new DOMParser().parseFromString(text, 'text/xml');
+      const steamId = xml.querySelector('steamID64')?.textContent?.trim();
+      if (steamId && /^\d{17}$/.test(steamId)) return steamId;
+    } catch(e) {
+      console.warn(`Vanity proxy ${i+1} failed:`, e);
+      continue;
+    }
+  }
+  return null;
 }
 
 function setStatus(type, msg) {
