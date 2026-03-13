@@ -1431,6 +1431,20 @@ async function syncSteam() {
       btn.disabled = false; return;
     }
 
+    // Fetch profile XML separately to get display name + avatar
+    setStatus('loading', '⟳ FETCHING PROFILE...');
+    let playerName = 'Unknown';
+    let avatarUrl = '';
+    try {
+      const profileText = await fetchWithProxy(`https://steamcommunity.com/profiles/${steamId64}/?xml=1`);
+      const profileXml = new DOMParser().parseFromString(profileText, 'text/xml');
+      const rawName = profileXml.querySelector('steamID')?.textContent || '';
+      playerName = rawName.replace('<![CDATA[','').replace(']]>','').trim() || 'Unknown';
+      const rawAvatar = profileXml.querySelector('avatarFull')?.textContent ||
+                        profileXml.querySelector('avatarMedium')?.textContent || '';
+      avatarUrl = rawAvatar.replace('<![CDATA[','').replace(']]>','').trim();
+    } catch(e) { console.warn('Profile fetch failed:', e); }
+
     setStatus('loading', '⟳ FETCHING ACHIEVEMENTS...');
     const statsUrl = `https://steamcommunity.com/profiles/${steamId64}/stats/${RE2_APPID}/achievements/?xml=1`;
     const text = await fetchWithProxy(statsUrl);
@@ -1445,9 +1459,6 @@ async function syncSteam() {
       btn.disabled = false; return;
     }
 
-    const playerName = (xml.querySelector('steamID')?.textContent ||
-                        xml.querySelector('playername')?.textContent || 'Unknown').replace(/\[CDATA\[|\]\]/g, '').trim();
-    const avatarUrl = (xml.querySelector('avatarIcon')?.textContent || '').replace(/\[CDATA\[|\]\]/g, '').trim();
     const achNodes = xml.querySelectorAll('achievement');
 
     if (achNodes.length === 0) {
