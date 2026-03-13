@@ -1538,6 +1538,9 @@ function showSteamProfile(name, avatar) {
 }
 
 function disconnectSteam() {
+  completed = [];
+  renderAchievements();
+  renderProgress();
   document.getElementById('steamProfile').style.display = 'none';
   document.getElementById('steamInput').style.display = '';
   document.getElementById('steamInput').value = '';
