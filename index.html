@@ -1209,11 +1209,9 @@ const films = [
 ];
 
 // ---- STATE ----
-let completed = JSON.parse(localStorage.getItem('re2_ach') || '[]');
-
-function save() {
-  localStorage.setItem('re2_ach', JSON.stringify(completed));
-}
+// Never saved to localStorage — always starts blank.
+// Steam sync is the only thing that fills this in.
+let completed = [];
 
 // ---- RENDER ----
 function renderAchievements() {
@@ -1268,7 +1266,6 @@ let searchTerm = '';
 function toggleAch(id) {
   if(completed.includes(id)) completed = completed.filter(x => x !== id);
   else completed.push(id);
-  save();
   renderAchievements();
   renderProgress();
 }
@@ -1375,7 +1372,6 @@ function showTab(name, e) {
 function resetProgress() {
   if(confirm('Reset all progress? This cannot be undone.')) {
     completed = [];
-    save();
     renderAchievements();
     renderProgress();
     disconnectSteam();
@@ -1489,7 +1485,6 @@ async function syncSteam() {
       }
     });
 
-    save();
     renderAchievements();
     renderProgress();
     showSteamProfile(playerName, avatarUrl);
