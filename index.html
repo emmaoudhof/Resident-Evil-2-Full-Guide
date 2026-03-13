@@ -1509,51 +1509,53 @@ function resetProgress() {
 }
 
 // ---- STEAM ACHIEVEMENT API NAME MAPPING ----
+// Names confirmed from live Steam XML (new_achievement_1_X format)
+// Order matches the Steam XML output order seen in console
 const steamAchMap = {
-  'ACH_STORY_ARRIVE_RPD': 1,
-  'ACH_STORY_GODDESS': 2,
-  'ACH_STORY_ESCAPE_RPD': 3,
-  'ACH_STORY_ADA': 4,
-  'ACH_STORY_SHERRY': 5,
-  'ACH_STORY_ESCAPE_SEWERS': 6,
-  'ACH_STORY_LEON_CLEAR': 7,
-  'ACH_STORY_CLAIRE_CLEAR': 8,
-  'ACH_STORY_TRUE_END': 9,
-  'ACH_MISC_COMBINE': 10,
-  'ACH_MISC_POUCH': 11,
-  'ACH_MISC_CUSTOMIZE': 12,
-  'ACH_MISC_KNIFE': 13,
-  'ACH_MISC_COUNTER': 14,
-  'ACH_MISC_BOARD': 15,
-  'ACH_COLLECT_RACCOON': 16,
-  'ACH_MISC_SAFE': 17,
-  'ACH_MISC_LOCKER': 18,
-  'ACH_MISC_GRENADE_MOUTH': 19,
-  'ACH_MISC_GRENADE_MULTI': 20,
-  'ACH_MISC_SHOOT_AIR': 21,
-  'ACH_MISC_FLASH': 22,
-  'ACH_MISC_TYRANT_HAT': 23,
-  'ACH_MISC_STAB_BOSS': 24,
-  'ACH_COLLECT_FILM': 25,
-  'ACH_MISC_ALL_POUCH': 26,
-  'ACH_MISC_ADA_ONLY': 27,
-  'ACH_MISC_SHERRY_ESCAPE': 28,
-  'ACH_MISC_LEON_BOSS': 29,
-  'ACH_MISC_CLAIRE_BOSS': 30,
-  'ACH_COLLECT_FILES': 31,
-  'ACH_COLLECT_ALL_RACCOON': 32,
-  'ACH_MISC_ALL_LOCK': 33,
-  'ACH_SCORE_LEON_S': 34,
-  'ACH_SCORE_CLAIRE_S': 35,
-  'ACH_CLEAR_LEON_HARD': 36,
-  'ACH_CLEAR_CLAIRE_HARD': 37,
-  'ACH_MISC_NO_HEAL': 38,
-  'ACH_MISC_NO_SAVE': 39,
-  'ACH_MISC_NO_WALK': 40,
-  'ACH_MISC_JILL': 41,
-  'ACH_HUNK_CLEAR': 42,
-  'ACH_GHOST_RACCOON': 43,
-  'ACH_GHOST_NOWAOUT': 44,
+  'new_achievement_1_1':  1,  // Welcome to the City of the Dead
+  'new_achievement_1_2':  2,  // Path to the Goddess
+  'new_achievement_1_3':  3,  // Never-Ending Rain
+  'new_achievement_1_4':  4,  // Hack Complete
+  'new_achievement_1_5':  5,  // Hide and Seek
+  'new_achievement_1_6':  6,  // A Great Need for a Shower
+  'new_achievement_1_7':  7,  // A Hero Emerges
+  'new_achievement_1_8':  8,  // A Heroine Emerges
+  'new_achievement_1_10': 9,  // Broken Umbrella
+  'new_achievement_1_11': 10, // The Basics of Survival
+  'new_achievement_1_12': 11, // Hip to Add Squares
+  'new_achievement_1_13': 12, // Customizer
+  'new_achievement_1_14': 13, // Don't Need No Stinkin' Gun
+  'new_achievement_1_15': 14, // Eat This!
+  'new_achievement_1_16': 15, // That'll Hold 'Em
+  'new_achievement_1_17': 16, // Vermin Extermination
+  'new_achievement_1_18': 17, // A Vault-like Mind
+  'new_achievement_1_19': 18, // First Break-In
+  'new_achievement_1_21': 19, // Bon Appétit
+  'new_achievement_1_22': 20, // Zombie Roundup
+  'new_achievement_1_23': 21, // Like Skeet Shooting
+  'new_achievement_1_26': 22, // Keep Their Heads Ringin'
+  'new_achievement_1_28': 23, // Hats Off!
+  'new_achievement_1_32': 24, // Gotcha!
+  'new_achievement_1_44': 25, // Treasure Hunter
+  'new_achievement_1_9':  26, // A Waist of Space
+  'new_achievement_1_20': 27, // One Slick Super-spy
+  'new_achievement_1_24': 28, // Young Escapee
+  'new_achievement_1_25': 29, // In the Blink of an Eye
+  'new_achievement_1_27': 30, // With Time to Spare
+  'new_achievement_1_29': 31, // Lore Explorer
+  'new_achievement_1_30': 32, // Complete Vermin Extermination
+  'new_achievement_1_31': 33, // Master of Unlocking
+  'new_achievement_1_33': 34, // Leon "S." Kennedy
+  'new_achievement_1_34': 35, // Sizzling Scarlet Hero
+  'new_achievement_1_35': 36, // Hardcore Rookie
+  'new_achievement_1_36': 37, // Hardcore College Student
+  'new_achievement_1_37': 38, // Frugalist
+  'new_achievement_1_38': 39, // Minimalist
+  'new_achievement_1_39': 40, // A Small Carbon Footprint
+  'new_achievement_1_40': 41, // Chasing Jill
+  'new_achievement_1_41': 42, // Grim Reaper
+  'new_achievement_1_42': 43, // Got 'Em
+  'new_achievement_1_43': 44, // Hell of a Sheriff
 };
 
 const RE2_APPID = 883710;
@@ -1615,11 +1617,9 @@ async function syncSteam() {
       btn.disabled = false; return;
     }
 
-    const playerName = xml.querySelector('steamID')?.textContent || 
-                       xml.querySelector('playername')?.textContent ||
-                       xml.querySelector('playerName')?.textContent || 'Unknown';
-    const avatarUrl = xml.querySelector('avatarIcon')?.textContent || 
-                      xml.querySelector('avatar')?.textContent || '';
+    const playerName = (xml.querySelector('steamID')?.textContent || 
+                        xml.querySelector('playername')?.textContent || 'Unknown').replace(/\[CDATA\[|\]\]/g, '').trim();
+    const avatarUrl = (xml.querySelector('avatarIcon')?.textContent || '').replace(/\[CDATA\[|\]\]/g, '').trim();
     const achNodes = xml.querySelectorAll('achievement');
 
     console.log('Player:', playerName);
