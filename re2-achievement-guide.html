@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE2 Achievement Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --darkred: #7b1a12;
+    --blood: #8b0000;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e0d8d0;
+    --muted: #666;
+    --gold: #c9a84c;
+    --green: #2ecc71;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'Barlow', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 48px 32px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #1a0505 0%, var(--bg) 100%);
+    overflow: hidden;
+  }
+
+  header::after {
+    content: 'RACCOON CITY';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: var(--display);
+    font-size: 80px;
+    color: rgba(192,57,43,0.06);
+    letter-spacing: 8px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(42px, 8vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    color: #fff;
+  }
+
+  h1 span {
+    color: var(--red);
+  }
+
+  .header-sub {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    font-family: var(--mono);
+  }
+
+  .progress-bar-wrap {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 400px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blood), var(--red));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-count {
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--red);
+    min-width: 70px;
+  }
+
+  /* LAYOUT */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--red);
+    border-bottom-color: var(--red);
+  }
+
+  /* SECTION */
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-family: var(--mono);
+  }
+
+  /* ACHIEVEMENTS GRID */
+  .ach-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--red);
+    color: var(--text);
+    background: rgba(192,57,43,0.1);
+  }
+
+  .search-box {
+    margin-left: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 14px;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--red); }
+  .search-box::placeholder { color: var(--muted); }
+
+  .ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+
+  .ach-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ach-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+
+  .ach-card:hover {
+    border-color: #333;
+    background: var(--surface2);
+  }
+
+  .ach-card.completed {
+    background: rgba(46,204,113,0.04);
+    border-color: rgba(46,204,113,0.2);
+  }
+
+  .ach-card.completed::before {
+    background: var(--green);
+  }
+
+  .ach-card.missable::before {
+    background: var(--gold);
+  }
+
+  .ach-card.completed.missable::before {
+    background: var(--green);
+  }
+
+  .ach-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ach-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .ach-card.completed .ach-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .ach-checkbox-inner {
+    display: none;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .ach-card.completed .ach-checkbox-inner { display: block; }
+
+  .ach-info { flex: 1; min-width: 0; }
+
+  .ach-name {
+    font-family: var(--display);
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .ach-card.completed .ach-name { color: var(--green); }
+
+  .ach-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .ach-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .tag-missable { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .tag-story { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
+  .tag-leon { background: rgba(52,152,219,0.15); color: #5dade2; border: 1px solid rgba(52,152,219,0.3); }
+  .tag-claire { background: rgba(231,76,60,0.15); color: #f1948a; border: 1px solid rgba(231,76,60,0.3); }
+  .tag-hardcore { background: rgba(192,57,43,0.25); color: #ff6b6b; border: 1px solid rgba(192,57,43,0.5); }
+  .tag-both { background: rgba(100,100,100,0.15); color: #aaa; border: 1px solid rgba(100,100,100,0.3); }
+  .tag-challenge { background: rgba(155,89,182,0.15); color: #bb8fce; border: 1px solid rgba(155,89,182,0.3); }
+  .tag-dlc { background: rgba(46,204,113,0.15); color: #82e0aa; border: 1px solid rgba(46,204,113,0.3); }
+
+  /* TABLE STYLES */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .data-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(42,42,42,0.5);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .code-badge {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: rgba(192,57,43,0.15);
+    color: var(--red);
+    padding: 2px 8px;
+    border: 1px solid rgba(192,57,43,0.3);
+    letter-spacing: 2px;
+  }
+
+  .reward-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+  }
+
+  /* SUBSECTION */
+  .subsection {
+    margin-bottom: 40px;
+  }
+
+  .subsection-title {
+    font-family: var(--display);
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .subsection-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .subsection-icon { font-size: 18px; }
+
+  /* BOSS CARDS */
+  .boss-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 16px;
+  }
+
+  .boss-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .boss-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blood), transparent);
+  }
+
+  .boss-name {
+    font-family: var(--display);
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .boss-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    gap: 16px;
+  }
+
+  .boss-meta span { color: var(--red); }
+
+  .boss-weak {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 8px 12px;
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.2);
+  }
+
+  .boss-weak-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .boss-weak-value {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .boss-tips {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .boss-tips li {
+    font-size: 13px;
+    color: #aaa;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .boss-tips li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-size: 10px;
+    top: 3px;
+  }
+
+  /* KEYS */
+  .keys-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .key-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .key-symbol {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .key-name {
+    font-family: var(--display);
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .key-who {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .key-location {
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  /* FILM ROLLS */
+  .film-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .film-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+
+  .film-name {
+    font-family: var(--display);
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+
+  .film-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px 16px;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+
+  .film-row-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+
+  .film-row-value {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  .film-reward {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  /* MEDALLIONS */
+  .medallion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .medallion-grid { grid-template-columns: 1fr; }
+    .boss-grid { grid-template-columns: 1fr; }
+  }
+
+  .medallion-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .medallion-name {
+    font-family: var(--display);
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--gold);
+  }
+
+  .scenario-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .scenario-value {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 10px;
+  }
+
+  /* MR RACCOON LIST */
+  .raccoon-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .raccoon-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .raccoon-item:hover { background: var(--surface2); }
+
+  .raccoon-item.found {
+    background: rgba(46,204,113,0.04);
+    border-color: rgba(46,204,113,0.2);
+  }
+
+  .raccoon-num {
+    font-family: var(--display);
+    font-size: 20px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .raccoon-item.found .raccoon-num { color: var(--green); }
+
+  .raccoon-loc {
+    font-family: var(--display);
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .raccoon-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .raccoon-excl {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  /* NOTES */
+  .notes-section-title {
+    font-family: var(--display);
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--red);
+    margin: 20px 0 10px;
+    padding-left: 12px;
+    border-left: 3px solid var(--red);
+  }
+
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .note-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    display: grid;
+    grid-template-columns: 36px 1fr 1fr;
+    gap: 8px 16px;
+    align-items: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .note-item:hover { background: var(--surface2); }
+  .note-item.read { opacity: 0.5; }
+  .note-item.read .note-num { color: var(--green); }
+
+  .note-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .note-name { color: var(--text); }
+  .note-loc { color: var(--muted); font-size: 12px; }
+
+  /* SAFETY DEPOSIT */
+  .deposit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 700px) { .deposit-grid { grid-template-columns: 1fr; } }
+
+  .deposit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+  }
+
+  .deposit-code {
+    font-family: var(--display);
+    font-size: 40px;
+    letter-spacing: 4px;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .deposit-reward {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+  }
+
+  /* RESET */
+  .reset-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .tip-box {
+    background: rgba(192,57,43,0.07);
+    border: 1px solid rgba(192,57,43,0.2);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+
+  .tip-box strong { color: var(--red); font-family: var(--mono); font-size: 11px; letter-spacing: 2px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">// SURVIVAL HORROR DATABASE //</div>
+  <h1>RESIDENT EVIL 2<br><span>ACHIEVEMENT GUIDE</span></h1>
+  <div class="header-sub">44 ACHIEVEMENTS · ALL SCENARIOS · ALL COLLECTIBLES</div>
+  <div class="progress-bar-wrap">
+    <span class="progress-label">COMPLETION</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <span class="progress-count"><span id="progressNum">0</span>/44</span>
+    <button class="reset-btn" onclick="resetProgress()">RESET</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('achievements')">ACHIEVEMENTS</button>
+    <button class="tab" onclick="showTab('safes')">SAFES & LOCKS</button>
+    <button class="tab" onclick="showTab('raccoons')">MR. RACCOONS</button>
+    <button class="tab" onclick="showTab('bosses')">BOSS FIGHTS</button>
+    <button class="tab" onclick="showTab('notes')">FILES & NOTES</button>
+    <button class="tab" onclick="showTab('keys')">KEY ITEMS</button>
+    <button class="tab" onclick="showTab('film')">FILM ROLLS</button>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="section active" id="sec-achievements">
+    <div class="section-title">ALL ACHIEVEMENTS</div>
+    <div class="section-desc">// CLICK AN ACHIEVEMENT TO MARK AS COMPLETED · PROGRESS IS SAVED LOCALLY //</div>
+
+    <div class="ach-filters">
+      <button class="filter-btn active" onclick="filterAch('all', this)">ALL (44)</button>
+      <button class="filter-btn" onclick="filterAch('story', this)">STORY</button>
+      <button class="filter-btn" onclick="filterAch('missable', this)">⚠ MISSABLE</button>
+      <button class="filter-btn" onclick="filterAch('leon', this)">LEON</button>
+      <button class="filter-btn" onclick="filterAch('claire', this)">CLAIRE</button>
+      <button class="filter-btn" onclick="filterAch('challenge', this)">CHALLENGE</button>
+      <button class="filter-btn" onclick="filterAch('dlc', this)">GHOST SURVIVORS</button>
+      <button class="filter-btn" onclick="filterAch('incomplete', this)">INCOMPLETE</button>
+      <input class="search-box" type="text" placeholder="Search..." oninput="searchAch(this.value)">
+    </div>
+
+    <div class="ach-grid" id="achGrid"></div>
+  </div>
+
+  <!-- SAFES & LOCKS -->
+  <div class="section" id="sec-safes">
+    <div class="section-title">SAFES, LOCKS & CODES</div>
+    <div class="section-desc">// ALL COMBINATIONS AND WHAT THEY UNLOCK //</div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🔒</span> LEON'S DESK — West Office, 1F</div>
+      <table class="data-table">
+        <thead><tr><th>Slot</th><th>Code</th><th>Reward</th></tr></thead>
+        <tbody>
+          <tr><td>Left lock</td><td><span class="code-badge">NED</span></td><td><span class="reward-badge">High-Capacity Magazine (Leon) / Speed Loader (Claire)</span></td></tr>
+          <tr><td>Right lock</td><td><span class="code-badge">MRG</span></td><td><span class="reward-badge">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🗄️</span> LOCKERS</div>
+      <table class="data-table">
+        <thead><tr><th>Location</th><th>Code</th><th>Reward</th></tr></thead>
+        <tbody>
+          <tr><td>Police Station 2F – Men's Shower Room</td><td><span class="code-badge">CAP</span></td><td><span class="reward-badge">Shotgun Shells (Leon) / Flame Rounds (Claire)</span></td></tr>
+          <tr><td>Police Station 3F – Northwestern Stairs</td><td><span class="code-badge">DCM</span></td><td><span class="reward-badge">Magnum Ammo (Leon) / SMG Ammo (Claire)</span></td></tr>
+          <tr><td>Sewers – Control Room</td><td><span class="code-badge">SZF</span></td><td><span class="reward-badge">Magnum Ammo (Leon) / SMG Ammo (Claire)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🔐</span> SAFES</div>
+      <table class="data-table">
+        <thead><tr><th>Location</th><th>Combination</th><th>Reward</th></tr></thead>
+        <tbody>
+          <tr><td>Police Station 1F – West Office</td><td><span class="code-badge">L9 · R15 · L7</span></td><td><span class="reward-badge">Hip Pouch</span></td></tr>
+          <tr><td>Police Station 2F – Waiting Room</td><td><span class="code-badge">L6 · R2 · L11</span></td><td><span class="reward-badge">Muzzle Break (Leon) / High-Cap Mag (Claire)</span></td></tr>
+          <tr><td>Sewers B1 – Treatment Pool Room</td><td><span class="code-badge">L2 · R12 · L8</span></td><td><span class="reward-badge">Shotgun Stock (Leon) / Hip Pouch (Claire)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">📦</span> PORTABLE SAFES</div>
+      <div class="tip-box"><strong>NOTE</strong> — Combinations are random per player. Press buttons in the order the lights activate. Both portable safes reward a Spare Key used in the Safety Deposit Room.</div>
+      <table class="data-table">
+        <thead><tr><th>Location</th><th>Requirement</th><th>Reward</th></tr></thead>
+        <tbody>
+          <tr><td>Police Station 2F – Shower Room</td><td>None</td><td><span class="reward-badge">Spare Key 1</span></td></tr>
+          <tr><td>Police Station 2F – Linen Room</td><td>Diamond Key required</td><td><span class="reward-badge">Spare Key 2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🔑</span> SAFETY DEPOSIT ROOM — Police Station 1F</div>
+      <div class="tip-box"><strong>REQUIRES</strong> — Both Spare Keys must be inserted first.</div>
+      <div class="deposit-grid">
+        <div class="deposit-card"><div class="deposit-code">109</div><div class="deposit-reward">Shotgun Shells (Leon)<br>Flame Rounds (Claire)</div></div>
+        <div class="deposit-card"><div class="deposit-code">203</div><div class="deposit-reward">Hip Pouch</div></div>
+        <div class="deposit-card"><div class="deposit-code">306</div><div class="deposit-reward">Combat Knife</div></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🏛️</span> MEDALLIONS — Goddess Statue, Main Hall</div>
+      <div class="medallion-grid">
+        <div class="medallion-card">
+          <div class="medallion-name">🦁 Lion</div>
+          <div class="scenario-label">Scenario A</div>
+          <div class="scenario-value">Lion · Leafy Branch · Bird</div>
+          <div class="scenario-label">Scenario B</div>
+          <div class="scenario-value">Crown · Torch · Bird</div>
+        </div>
+        <div class="medallion-card">
+          <div class="medallion-name">🦄 Unicorn</div>
+          <div class="scenario-label">Scenario A</div>
+          <div class="scenario-value">Fish · Scorpion · Vase</div>
+          <div class="scenario-label">Scenario B</div>
+          <div class="scenario-value">Two People · Scales · Snake</div>
+        </div>
+        <div class="medallion-card">
+          <div class="medallion-name">👩 Maiden</div>
+          <div class="scenario-label">Scenario A</div>
+          <div class="scenario-value">Woman · Bow · Snake</div>
+          <div class="scenario-label">Scenario B</div>
+          <div class="scenario-value">Ram · Harp · Bird</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title"><span class="subsection-icon">🧪</span> NEST LABORATORY PUZZLES</div>
+      <table class="data-table">
+        <thead><tr><th>Puzzle</th><th>Scenario A</th><th>Scenario B</th></tr></thead>
+        <tbody>
+          <tr><td>Greenhouse Terminal (ladder)</td><td><span class="code-badge">3 · 1 · 2 · 3</span></td><td><span class="code-badge">5 · 8 · 3 · 1</span></td></tr>
+          <tr><td>Greenhouse Terminal (dispersal unit)</td><td><span class="code-badge">1 · 0 · 6 · 7</span></td><td><span class="code-badge">2 · 0 · 4 · 8</span></td></tr>
+          <tr><td>Dispersal Cartridge (Drug Testing Lab)</td><td><span class="code-badge">R G B R G B R G</span></td><td><span class="code-badge">B R G B R G B R G</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MR RACCOONS -->
+  <div class="section" id="sec-raccoons">
+    <div class="section-title">MR. RACCOON LOCATIONS</div>
+    <div class="section-desc">// 15 TOTAL · CLICK TO MARK AS FOUND · REWARD: INFINITE COMBAT KNIFE //</div>
+
+    <div class="tip-box"><strong>ACHIEVEMENTS</strong> — Destroy 1 for "Vermin Extermination" · Destroy all 15 for "Complete Vermin Extermination" + Infinite Combat Knife</div>
+
+    <div class="notes-section-title">LEON A / B STORY</div>
+    <div class="raccoon-list" id="raccoonList"></div>
+  </div>
+
+  <!-- BOSS FIGHTS -->
+  <div class="section" id="sec-bosses">
+    <div class="section-title">BOSS FIGHTS</div>
+    <div class="section-desc">// WEAK POINTS · STRATEGIES · TIPS //</div>
+    <div class="boss-grid" id="bossGrid"></div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="section" id="sec-notes">
+    <div class="section-title">FILES & NOTES</div>
+    <div class="section-desc">// 58 TOTAL · CLICK TO MARK AS READ · REQUIRED FOR "LORE EXPLORER" //</div>
+    <div id="notesContainer"></div>
+  </div>
+
+  <!-- KEY ITEMS -->
+  <div class="section" id="sec-keys">
+    <div class="section-title">KEY ITEMS — RPD KEYS</div>
+    <div class="section-desc">// FOUR SPECIAL KEYS · TWO ARE CHARACTER-EXCLUSIVE //</div>
+    <div class="tip-box"><strong>NOTE</strong> — The Club Key (Leon) and Heart Key (Claire) are character-exclusive. You can never collect all four in a single run.</div>
+    <div class="keys-grid" id="keysGrid"></div>
+  </div>
+
+  <!-- FILM ROLLS -->
+  <div class="section" id="sec-film">
+    <div class="section-title">HINT FILM ROLLS</div>
+    <div class="section-desc">// 3 TOTAL · DEVELOP AT THE DARK ROOM (1F RPD) //</div>
+    <div id="filmContainer"></div>
+  </div>
+</div>
+
+<script>
+// ---- DATA ----
+const achievements = [
+  { id:1,  name:"Welcome to the City of the Dead", desc:"Make it to the police station.", tags:["story","both"] },
+  { id:2,  name:"Path to the Goddess", desc:"Solve the Goddess Statue puzzle in the RPD.", tags:["story","both"] },
+  { id:3,  name:"Never-Ending Rain", desc:"Escape the police station.", tags:["story","both"] },
+  { id:4,  name:"Hack Complete", desc:"Complete Ada's segment. Leon's campaign only.", tags:["story","leon"] },
+  { id:5,  name:"Hide and Seek", desc:"Complete Sherry's segment. Claire's campaign only.", tags:["story","claire"] },
+  { id:6,  name:"A Great Need for a Shower", desc:"Escape from the sewers.", tags:["story","both"] },
+  { id:7,  name:"A Hero Emerges", desc:"Complete Leon's story in either A or B scenario.", tags:["story","leon"] },
+  { id:8,  name:"A Heroine Emerges", desc:"Complete Claire's story in either A or B scenario.", tags:["story","claire"] },
+  { id:9,  name:"Broken Umbrella", desc:"Witness the true ending by completing a B scenario.", tags:["story","both"] },
+  { id:10, name:"The Basics of Survival", desc:"Combine two items together.", tags:["challenge","both"] },
+  { id:11, name:"Hip to Add Squares", desc:"Increase your inventory slots.", tags:["challenge","both"] },
+  { id:12, name:"Customizer", desc:"Upgrade a weapon using custom parts.", tags:["challenge","missable","both"] },
+  { id:13, name:"Don't Need No Stinkin' Gun", desc:"Defeat an enemy using only a knife.", tags:["challenge","missable","both"] },
+  { id:14, name:"Eat This!", desc:"Counterattack an enemy with a sub-weapon while grabbed.", tags:["challenge","missable","both"] },
+  { id:15, name:"That'll Hold 'Em", desc:"Use wooden boards to barricade a window.", tags:["challenge","missable","both"] },
+  { id:16, name:"Vermin Extermination", desc:"Destroy a Mr. Raccoon figurine.", tags:["challenge","missable","both"] },
+  { id:17, name:"A Vault-like Mind", desc:"Open a portable safe.", tags:["challenge","missable","both"] },
+  { id:18, name:"First Break-In", desc:"Open a safe.", tags:["challenge","missable","both"] },
+  { id:19, name:"Bon Appétit", desc:"Shove a grenade into a zombie's mouth and shoot it.", tags:["challenge","missable","both"] },
+  { id:20, name:"Zombie Roundup", desc:"Hit multiple enemies with a single grenade.", tags:["challenge","missable","both"] },
+  { id:21, name:"Like Skeet Shooting", desc:"Shoot an enemy mid-air as it leaps at you.", tags:["challenge","missable","both"] },
+  { id:22, name:"Keep Their Heads Ringin'", desc:"Hit a Licker with a flash grenade.", tags:["challenge","missable","both"] },
+  { id:23, name:"Hats Off!", desc:"Shoot the hat off the Tyrant (Mr. X).", tags:["challenge","missable","both"] },
+  { id:24, name:"Gotcha!", desc:"Stab a boss enemy while it's knocked down.", tags:["challenge","missable","both"] },
+  { id:25, name:"Treasure Hunter", desc:"Find both hidden items revealed by developing the Roll Film.", tags:["challenge","missable","both"] },
+  { id:26, name:"A Waist of Space", desc:"Collect all 6 hip pouches in a single playthrough.", tags:["challenge","missable","both"] },
+  { id:27, name:"One Slick Super-spy", desc:"Complete Ada's segment using only the EMF Visualizer.", tags:["challenge","missable","leon"] },
+  { id:28, name:"Young Escapee", desc:"Escape the bedroom as Sherry in under 1 minute.", tags:["challenge","missable","claire"] },
+  { id:29, name:"In the Blink of an Eye", desc:"Defeat the Super Tyrant with over 5 minutes left on the timer.", tags:["challenge","missable","leon"] },
+  { id:30, name:"With Time to Spare", desc:"Defeat Stage 4G with over 4 minutes left on the timer.", tags:["challenge","missable","claire"] },
+  { id:31, name:"Lore Explorer", desc:"Read all 58 files across the game's scenarios.", tags:["challenge","missable","both"] },
+  { id:32, name:"Complete Vermin Extermination", desc:"Destroy all 15 Mr. Raccoon figurines.", tags:["challenge","missable","both"] },
+  { id:33, name:"Master of Unlocking", desc:"Open all 3 safes and 5 combination locks in the game.", tags:["challenge","missable","both"] },
+  { id:34, name:"Leon \"S.\" Kennedy", desc:"Complete Leon's story with an S rank.", tags:["challenge","missable","leon"] },
+  { id:35, name:"Sizzling Scarlet Hero", desc:"Complete Claire's story with an S rank.", tags:["challenge","missable","claire"] },
+  { id:36, name:"Hardcore Rookie", desc:"Complete Leon's story on Hardcore difficulty.", tags:["hardcore","leon"] },
+  { id:37, name:"Hardcore College Student", desc:"Complete Claire's story on Hardcore difficulty.", tags:["hardcore","claire"] },
+  { id:38, name:"Frugalist", desc:"Complete the game using a minimal number of recovery items.", tags:["challenge","missable","both"] },
+  { id:39, name:"Minimalist", desc:"Complete the game using a minimal number of saves.", tags:["challenge","missable","both"] },
+  { id:40, name:"A Small Carbon Footprint", desc:"Complete the game within a limited number of steps taken.", tags:["challenge","missable","both"] },
+  { id:41, name:"Chasing Jill", desc:"Read the letter left by Jill in the Gun Shop Kendo. Leon's campaign only.", tags:["challenge","missable","leon"] },
+  { id:42, name:"Grim Reaper", desc:"Complete the 4th Survivor mode as HUNK.", tags:["dlc","both"] },
+  { id:43, name:"Got 'Em", desc:"Destroy all 10 Mr. Raccoon figurines in Ghost Survivors mode.", tags:["dlc","missable","both"] },
+  { id:44, name:"Hell of a Sheriff", desc:"Defeat 100 enemies in the No Way Out Ghost Survivors challenge.", tags:["dlc","both"] },
+];
+
+const raccoons = [
+  { id:1,  loc:"1F – West Office", desc:"On the north wall, sitting on boxes on top of a cabinet", excl:"LEON", color:"leon" },
+  { id:2,  loc:"2F – S.T.A.R.S. Office", desc:"On an empty desk near the southern wall, behind a box and monitor", excl:"LEON", color:"leon" },
+  { id:3,  loc:"B1 – Firing Range", desc:"Down range, under the fallen target on the left side", excl:"LEON", color:"leon" },
+  { id:4,  loc:"1F – Break Room", desc:"Next to the bed, behind the brown bag", excl:"LEON", color:"leon" },
+  { id:5,  loc:"2F – Art Room Hallway", desc:"Open the shutter with the crank, on a table next to the stairs", excl:"LEON", color:"leon" },
+  { id:6,  loc:"3F – Clock Tower Hallway", desc:"Through the Clock Tower room to the west hallway, in the window on the left", excl:"LEON", color:"leon" },
+  { id:7,  loc:"Sewer Entrance", desc:"After the crocodile boss, look behind the pile of garbage", excl:"LEON", color:"leon" },
+  { id:8,  loc:"Sewer Incinerator", desc:"While playing as Ada, in the back-left corner of the room on the floor", excl:"LEON", color:"leon" },
+  { id:9,  loc:"Bottom Waterway", desc:"Exiting the waterway near the stairs, behind the metal table by an open door", excl:"LEON", color:"leon" },
+  { id:10, loc:"Laboratory – Cafeteria", desc:"Near the kitchen window, on a table", excl:"LEON", color:"leon" },
+  { id:11, loc:"Laboratory – Nap Room", desc:"Restore power to open the bunks, in the last bunk on the right", excl:"LEON", color:"leon" },
+  { id:12, loc:"3F – East Storage Room", desc:"After unlocking the Heart Key door, on the storage shelf to the left", excl:"CLAIRE", color:"claire" },
+  { id:13, loc:"Basketball Court", desc:"On the dashboard of the prison bus in the parking lot behind the RPD building", excl:"CLAIRE", color:"claire" },
+  { id:14, loc:"Orphanage – Front Hall", desc:"Go upstairs, enter the 2F room on the left, in one of the cubbies straight ahead", excl:"CLAIRE", color:"claire" },
+  { id:15, loc:"Police Station – Entrance", desc:"Near the entrance, go down and up the stairs, in the back-left of the planter", excl:"B ONLY", color:"both" },
+];
+
+const bosses = [
+  { name:"G — Stage 1", campaign:"Leon & Claire", loc:"Underground Facility", weak:"Eye on shoulder (shoot head until eye appears)", tips:["Aim for head/shoulder until eye appears, then focus all best ammo on the eye","Equip a Combat Knife to escape grab attacks","Use grenades or flash grenades to stun if cornered","Collect 4 item caches around the arena (grenades, ammo, health)","Keep moving, weave through passages, avoid getting cornered"] },
+  { name:"G — Stage 2", campaign:"Leon & Claire", loc:"Sewers (after Chess Piece puzzle)", weak:"Eye (always visible this time)", tips:["First phase: avoid holes Birkin clawed through, keep sprinting away from fire","On the container platform, weave right when he attacks","Blast the eye until Birkin falls to one knee, then immediately hit the switch","Hit the switch twice to win","Warning: getting hit by the shipping container is instant death"] },
+  { name:"G — Stage 3", campaign:"Leon & Claire", loc:"Laboratory", weak:"3 eyes (2 front, 1 back) → exposes core weak point", tips:["Bring 1–2 full healing items, Birkin is extremely aggressive","Use pistol to pop all 3 eyes; shoot back eye when Birkin throws debris","Once all eyes are destroyed, blast the exposed core with Magnum/Shotgun","Expose the core weak point twice to make it permanently exposed","Then unload everything into the weak spot to finish"] },
+  { name:"Super Tyrant", campaign:"Leon A only", loc:"Rooftop elevator platform", weak:"Exposed beating heart on chest", tips:["Survive 1:30 and Ada automatically throws you the Rocket Launcher — one shot wins","Mix Blue + Green + Red herbs to run faster and take less damage","Aim for the heart to flinch/stun him","Use fallen debris as cover between you and Tyrant","He will crouch and charge an instakill — shoot or flash grenade to interrupt it immediately"] },
+  { name:"G — Stage 4", campaign:"Claire A only", loc:"Train platform", weak:"Eye cluster on chest only", tips:["Grab the minigun and all available ammo before engaging","Only shoot the chest eyes — anywhere else deals minimal damage","Use the train car in the center to block his charge attacks","Run around the corner of the train car when he lunges","This fight is a long slog — it will drain most of your ammo"] },
+  { name:"G — Stage 5", campaign:"Leon & Claire B", loc:"Inside the train car", weak:"Mouth / eye inside the mouth", tips:["Back against the rear wall and keep shooting","Be frugal — conserve ammo and aim carefully","When the eye appears inside the mouth, unload everything","Keep firing until Birkin is finally defeated"] },
+];
+
+const notes = [
+  { group:"LEON A-SCENARIO (also Claire A)", items:[
+    {n:1, name:"Orientation Letter", loc:"Starts in Leon's inventory"},
+    {n:2, name:"Officer's Notebook", loc:"1F – Watchman's Room (cutscene)"},
+    {n:3, name:"Record of Events", loc:"1F – Operations Room"},
+    {n:4, name:"Uses of Gunpowder", loc:"1F – West Office"},
+    {n:5, name:"Rookie's First Assignment", loc:"1F – West Office"},
+    {n:6, name:"Operation Report", loc:"1F – West Office"},
+    {n:7, name:"Storage Locker Terminal Memo", loc:"1F – Safety Deposit Room"},
+    {n:8, name:"Medicinal Benefits of Herbs", loc:"1F – Dark Room"},
+    {n:9, name:"Portable Safe Instructions", loc:"2F – Shower Room"},
+    {n:10, name:"To Any Survivors", loc:"3F – Hallway, outside West Storage Room"},
+    {n:11, name:"Some Guy's Scribblings", loc:"3F – West Storage Room"},
+    {n:12, name:"Guide Pamphlet", loc:"2F – Waiting Room"},
+    {n:13, name:"Art Article \"The Red Stone\"", loc:"2F – Art Room"},
+    {n:14, name:"Internal Memo", loc:"2F – STARS Office"},
+    {n:15, name:"Memo \"Jail Power Panel\"", loc:"B1 – Jail"},
+    {n:16, name:"Autopsy Record No. 53477", loc:"B1 – Morgue"},
+    {n:17, name:"Equipment Disposal Notice", loc:"B1 – Firing Range"},
+    {n:18, name:"A Message From Mr. Raccoon", loc:"B1 – Firing Range"},
+    {n:19, name:"Confiscation Report", loc:"1F – Observation Room"},
+    {n:20, name:"Letter to STARS", loc:"2F – Armory"},
+    {n:21, name:"Repair Plan", loc:"2F – Clocktower"},
+    {n:22, name:"Ben's Memo", loc:"B1 – Jail / Ben's Jail Cell"},
+    {n:23, name:"Interview Transcript", loc:"B1 – Jail / Ben's Jail Cell"},
+    {n:24, name:"Sept. Inspection (Week 1)", loc:"Ada's Sequence – past 2nd Ventilation Fan"},
+    {n:25, name:"Sept. Inspection (Week 2)", loc:"Ada's Sequence – up the steps"},
+    {n:26, name:"Copy of E-mails to Umbrella HQ", loc:"Upper Sewers – Control Room"},
+    {n:27, name:"Sewers Company Pamphlet", loc:"Middle Sewers – Monitor Room"},
+    {n:28, name:"Unlocking the U-Area Door", loc:"Middle Sewers – Monitor Room"},
+    {n:29, name:"Delivery Receipt", loc:"Middle Sewers – Cable Car Platform"},
+    {n:30, name:"Jazz Festival Flyer", loc:"Sewers – Workers' Break Room"},
+    {n:31, name:"Nap Room Log", loc:"Laboratory – Reception"},
+    {n:32, name:"ID Wrist Band", loc:"Laboratory – Reception, Save Room"},
+    {n:33, name:"Special Forces Recording", loc:"Laboratory – on the walkway"},
+    {n:34, name:"Herbicide Synthesis", loc:"Laboratory – Drug Testing Lab"},
+    {n:35, name:"Somebody's Note", loc:"Laboratory – Stairwell, south of the Lobby"},
+    {n:36, name:"Wayne Li's Inbox", loc:"Laboratory – Low Temp Testing Lab"},
+    {n:37, name:"Bryon Cartwright's Inbox", loc:"Laboratory – Presentation Room (Senior Staff ID)"},
+    {n:38, name:"Wayne Li's Note", loc:"Laboratory – Nap Room"},
+    {n:39, name:"William Birkin's Inbox", loc:"Laboratory – P-4 Level Testing Lab"},
+    {n:40, name:"Research Diary", loc:"Laboratory – P-4 Level Testing Lab"},
+  ]},
+  { group:"CLAIRE A-SCENARIO EXCLUSIVE", items:[
+    {n:41, name:"Letter From Best Friend", loc:"Starts in Claire's inventory"},
+    {n:42, name:"Uses of Gunpowder", loc:"1F – West Office"},
+    {n:43, name:"Raccoon Monthly, June Issue", loc:"B1 – Elevator Control Room"},
+    {n:44, name:"Copy of E-mails to Chief Irons", loc:"2F – Chief's Office"},
+    {n:45, name:"Taxidermy Log", loc:"2F – Chief's Office"},
+    {n:46, name:"Repair Shop Letter", loc:"2F – Private Collection Room"},
+    {n:47, name:"Sally's Diary", loc:"Orphanage – Upper Hallway, outside Bedroom"},
+    {n:48, name:"Tom's Diary", loc:"Orphanage – Front Hall"},
+    {n:49, name:"____'s Diary", loc:"Orphanage – Director's Room"},
+    {n:50, name:"Letter from the Director", loc:"Orphanage – Bathroom"},
+    {n:51, name:"Report About \"G\"", loc:"Sewers – Office"},
+    {n:52, name:"Important NEST-Wide Alert", loc:"Laboratory – Security Room"},
+  ]},
+  { group:"LEON B-SCENARIO EXCLUSIVE", items:[
+    {n:53, name:"Scrap of Paper", loc:"1F – Watchman's Room"},
+    {n:54, name:"Notebook With Missing Page", loc:"1F – Main Hall"},
+    {n:55, name:"Claire's Memo", loc:"2F – STARS Office"},
+    {n:56, name:"Claire's Note", loc:"Sewers – Cable Car Platform"},
+  ]},
+  { group:"CLAIRE B-SCENARIO EXCLUSIVE", items:[
+    {n:57, name:"Leon's Memo", loc:"2F – STARS Office"},
+    {n:58, name:"Leon's Note", loc:"Sewers – Cable Car Platform"},
+  ]},
+];
+
+const keys = [
+  { symbol:"♠", name:"Spade Key", who:"Leon & Claire", loc:"3F – Stairwell (above the Dark Room)", howto:"On the desk in the room with the menacing mannequin shadow" },
+  { symbol:"♦", name:"Diamond Key", who:"Leon & Claire", loc:"B1 – Morgue", howto:"Open the body cabinet one spot from the left — a body will jump out, grab the key and run" },
+  { symbol:"♣", name:"Club Key", who:"Leon only", loc:"1F – Boiler Room", howto:"After getting the T-Bar and reaching the exterior balcony, go down from the crashed chopper and into the back maintenance room — taped to the whiteboard" },
+  { symbol:"♥", name:"Heart Key", who:"Claire only", loc:"2F – Private Collection Room", howto:"Accessible from the Parking Garage or Chief Irons' office — examine the picture in a frame on the back wall" },
+];
+
+const films = [
+  { num:"FILM ROLL #1", name:"Commemorative Photo", loc:"1F – Safety Deposit Room: enter code 106 into the keypad", solution:"Shows the book/hand configuration for the statue with the scepter in the 2F Art Room", steps:["Combine the Red Book (2F Library) with the statue hand (1F Library) and place on statue → get Scepter","Use the Scepter to open the Gem Box (1F Interrogation Room)","Inside is the STARS Badge — examine it to transform it, place it on PC in the 2F STARS Office"], reward:"Unlocks the Magnum (Leon) or MQ-11 SMG (Claire)" },
+  { num:"FILM ROLL #2", name:"3F Locker Photo", loc:"B1 – Firing Range: unlock the office door using the Diamond Key (B1 Morgue)", solution:"Shows the combination for the dial lock in the 3F Stairwell hallway", combo:"DCM", reward:"Magnum Ammo (Leon) / SMG Ammo (Claire)" },
+  { num:"FILM ROLL #3", name:"Hiding Spot", loc:"Upper Sewers – Work Room", solution:"Reveals two secret hiding spots back in the RPD. Use the T-Bar to return to the Police Station", spots:["2F – STARS Office: search drawer → Magnum Red-Dot Sight (Leon) / SMG Silencer (Claire)","1F – Press Room: search drawer → extra ammo"], reward:"Unlocks the Treasure Hunter 🏆 achievement" },
+];
+
+// ---- STATE ----
+let completed = JSON.parse(localStorage.getItem('re2_ach') || '[]');
+let foundRaccoons = JSON.parse(localStorage.getItem('re2_raccoons') || '[]');
+let readNotes = JSON.parse(localStorage.getItem('re2_notes') || '[]');
+let activeFilter = 'all';
+let searchTerm = '';
+
+function save() {
+  localStorage.setItem('re2_ach', JSON.stringify(completed));
+  localStorage.setItem('re2_raccoons', JSON.stringify(foundRaccoons));
+  localStorage.setItem('re2_notes', JSON.stringify(readNotes));
+}
+
+// ---- RENDER ----
+function renderAchievements() {
+  const grid = document.getElementById('achGrid');
+  const filtered = achievements.filter(a => {
+    const matchFilter = activeFilter === 'all' ? true :
+      activeFilter === 'incomplete' ? !completed.includes(a.id) :
+      activeFilter === 'missable' ? a.tags.includes('missable') :
+      activeFilter === 'hardcore' ? a.tags.includes('hardcore') :
+      a.tags.includes(activeFilter);
+    const matchSearch = searchTerm === '' || a.name.toLowerCase().includes(searchTerm) || a.desc.toLowerCase().includes(searchTerm);
+    return matchFilter && matchSearch;
+  });
+
+  grid.innerHTML = filtered.map(a => {
+    const isDone = completed.includes(a.id);
+    const isMissable = a.tags.includes('missable') || a.tags.includes('hardcore');
+    const tagHTML = a.tags.map(t => {
+      if(t === 'story') return `<span class="tag tag-story">STORY</span>`;
+      if(t === 'missable') return `<span class="tag tag-missable">⚠ MISSABLE</span>`;
+      if(t === 'leon') return `<span class="tag tag-leon">LEON</span>`;
+      if(t === 'claire') return `<span class="tag tag-claire">CLAIRE</span>`;
+      if(t === 'both') return `<span class="tag tag-both">BOTH</span>`;
+      if(t === 'challenge') return `<span class="tag tag-challenge">CHALLENGE</span>`;
+      if(t === 'hardcore') return `<span class="tag tag-hardcore">HARDCORE</span>`;
+      if(t === 'dlc') return `<span class="tag tag-dlc">GHOST SURVIVORS</span>`;
+      return '';
+    }).join('');
+    return `<div class="ach-card ${isDone?'completed':''} ${isMissable&&!isDone?'missable':''}" onclick="toggleAch(${a.id})">
+      <div class="ach-header">
+        <div class="ach-checkbox"><span class="ach-checkbox-inner">✓</span></div>
+        <div class="ach-info">
+          <div class="ach-name">${a.name}</div>
+          <div class="ach-desc">${a.desc}</div>
+        </div>
+      </div>
+      <div class="ach-tags">${tagHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderProgress() {
+  const count = completed.length;
+  const pct = (count / 44) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressNum').textContent = count;
+}
+
+function toggleAch(id) {
+  if(completed.includes(id)) completed = completed.filter(x => x !== id);
+  else completed.push(id);
+  save();
+  renderAchievements();
+  renderProgress();
+}
+
+function filterAch(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAchievements();
+}
+
+function searchAch(val) {
+  searchTerm = val.toLowerCase();
+  renderAchievements();
+}
+
+function renderRaccoons() {
+  const list = document.getElementById('raccoonList');
+  list.innerHTML = raccoons.map(r => {
+    const found = foundRaccoons.includes(r.id);
+    const exclClass = r.color === 'leon' ? 'tag-leon' : r.color === 'claire' ? 'tag-claire' : 'tag-both';
+    const exclLabel = r.excl === 'B ONLY' ? 'B SCENARIO' : r.excl;
+    return `<div class="raccoon-item ${found?'found':''}" onclick="toggleRaccoon(${r.id})">
+      <div class="raccoon-num">${found ? '✓' : r.id}</div>
+      <div>
+        <div class="raccoon-loc">${r.loc}</div>
+        <div class="raccoon-desc">${r.desc}</div>
+      </div>
+      <span class="raccoon-excl tag ${exclClass}">${exclLabel}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleRaccoon(id) {
+  if(foundRaccoons.includes(id)) foundRaccoons = foundRaccoons.filter(x => x !== id);
+  else foundRaccoons.push(id);
+  save();
+  renderRaccoons();
+}
+
+function renderBosses() {
+  const grid = document.getElementById('bossGrid');
+  grid.innerHTML = bosses.map(b => `
+    <div class="boss-card">
+      <div class="boss-name">${b.name}</div>
+      <div class="boss-meta">
+        <div>CAMPAIGN: <span>${b.campaign}</span></div>
+        <div>LOCATION: <span>${b.loc}</span></div>
+      </div>
+      <div class="boss-weak">
+        <span class="boss-weak-label">WEAK POINT</span>
+        <span class="boss-weak-value">${b.weak}</span>
+      </div>
+      <ul class="boss-tips">${b.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+}
+
+function renderNotes() {
+  const container = document.getElementById('notesContainer');
+  container.innerHTML = notes.map(group => `
+    <div class="notes-section-title">${group.group}</div>
+    <div class="notes-list">
+      ${group.items.map(n => `
+        <div class="note-item ${readNotes.includes(n.n)?'read':''}" onclick="toggleNote(${n.n})">
+          <span class="note-num">#${n.n}</span>
+          <span class="note-name">${n.name}</span>
+          <span class="note-loc">${n.loc}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function toggleNote(n) {
+  if(readNotes.includes(n)) readNotes = readNotes.filter(x => x !== n);
+  else readNotes.push(n);
+  save();
+  renderNotes();
+}
+
+function renderKeys() {
+  const grid = document.getElementById('keysGrid');
+  grid.innerHTML = keys.map(k => `
+    <div class="key-card">
+      <div class="key-symbol">${k.symbol}</div>
+      <div>
+        <div class="key-name">${k.name}</div>
+        <div class="key-who">${k.who}</div>
+        <div class="key-location"><strong style="color:var(--text)">Location:</strong> ${k.loc}<br><br>${k.howto}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderFilm() {
+  const container = document.getElementById('filmContainer');
+  container.innerHTML = films.map(f => `
+    <div class="film-card">
+      <div class="film-num">${f.num}</div>
+      <div class="film-name">${f.name}</div>
+      <div class="film-row"><span class="film-row-label">LOCATION</span><span class="film-row-value">${f.loc}</span></div>
+      <div class="film-row"><span class="film-row-label">PUZZLE</span><span class="film-row-value">${f.solution}</span></div>
+      ${f.combo ? `<div class="film-row"><span class="film-row-label">CODE</span><span class="film-row-value"><span class="code-badge">${f.combo}</span></span></div>` : ''}
+      ${f.steps ? `<div class="film-row"><span class="film-row-label">STEPS</span><span class="film-row-value"><ol style="padding-left:16px;display:flex;flex-direction:column;gap:4px;">${f.steps.map(s=>`<li>${s}</li>`).join('')}</ol></span></div>` : ''}
+      ${f.spots ? `<div class="film-row"><span class="film-row-label">HIDING SPOTS</span><span class="film-row-value">${f.spots.map(s=>`<div style="margin-bottom:4px">▸ ${s}</div>`).join('')}</span></div>` : ''}
+      <div class="film-reward">🏆 REWARD — ${f.reward}</div>
+    </div>
+  `).join('');
+}
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function resetProgress() {
+  if(confirm('Reset all progress? This cannot be undone.')) {
+    completed = []; foundRaccoons = []; readNotes = [];
+    save();
+    renderAchievements();
+    renderProgress();
+    renderRaccoons();
+    renderNotes();
+  }
+}
+
+// INIT
+renderAchievements();
+renderProgress();
+renderRaccoons();
+renderBosses();
+renderNotes();
+renderKeys();
+renderFilm();
+</script>
+</body>
+</html>
