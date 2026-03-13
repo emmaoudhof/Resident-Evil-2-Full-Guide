@@ -1531,7 +1531,11 @@ function setStatus(type, msg) {
 function showSteamProfile(name, avatar) {
   document.getElementById('steamProfile').style.display = 'flex';
   document.getElementById('steamPlayerName').textContent = name;
-  if (avatar) document.getElementById('steamAvatar').src = avatar;
+  if (avatar) {
+    // Proxy the avatar through corsproxy so it loads without CORS issues
+    const proxied = `https://corsproxy.io/?${encodeURIComponent(avatar)}`;
+    document.getElementById('steamAvatar').src = proxied;
+  }
   document.getElementById('steamInput').style.display = 'none';
   const btn = document.getElementById('steamSyncBtn');
   btn.textContent = 'RE-SYNC';
