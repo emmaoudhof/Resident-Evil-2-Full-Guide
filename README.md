@@ -2,7 +2,7 @@
 
 An interactive, single-page web guide for **Resident Evil 2 Remake (2019)** — built for tracking all 44 achievements, with Steam sync, puzzle codes, boss tips, and collectible locations.
 
-**Live site:** [emmaoudhof.github.io/Resident-Evil-2-Full-Guide](https://emmaoudhof.github.io/Resident-Evil-2-Full-Guide/)
+**Live site:** [emmaoudhof.github.io/Resident-Evil-2-Full-Guide](**https://emmaoudhof.github.io/Resident-Evil-2-Full-Guide/)
 
 ---
 
