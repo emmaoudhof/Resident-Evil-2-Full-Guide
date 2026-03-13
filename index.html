@@ -33,7 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* Noise overlay */
   body::before {
     content: '';
     position: fixed;
@@ -44,7 +43,6 @@
     opacity: 0.4;
   }
 
-  /* HEADER */
   header {
     position: relative;
     padding: 48px 32px 32px;
@@ -84,9 +82,7 @@
     color: #fff;
   }
 
-  h1 span {
-    color: var(--red);
-  }
+  h1 span { color: var(--red); }
 
   .header-sub {
     margin-top: 12px;
@@ -133,14 +129,12 @@
     min-width: 70px;
   }
 
-  /* LAYOUT */
   .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 32px 24px;
   }
 
-  /* NAV TABS */
   .tabs {
     display: flex;
     gap: 2px;
@@ -172,7 +166,6 @@
     border-bottom-color: var(--red);
   }
 
-  /* SECTION */
   .section { display: none; animation: fadeIn 0.3s ease; }
   .section.active { display: block; }
 
@@ -196,7 +189,6 @@
     font-family: var(--mono);
   }
 
-  /* ACHIEVEMENTS GRID */
   .ach-filters {
     display: flex;
     gap: 8px;
@@ -274,17 +266,9 @@
     border-color: rgba(46,204,113,0.2);
   }
 
-  .ach-card.completed::before {
-    background: var(--green);
-  }
-
-  .ach-card.missable::before {
-    background: var(--gold);
-  }
-
-  .ach-card.completed.missable::before {
-    background: var(--green);
-  }
+  .ach-card.completed::before { background: var(--green); }
+  .ach-card.missable::before { background: var(--gold); }
+  .ach-card.completed.missable::before { background: var(--green); }
 
   .ach-header {
     display: flex;
@@ -310,13 +294,7 @@
     border-color: var(--green);
   }
 
-  .ach-checkbox-inner {
-    display: none;
-    color: #000;
-    font-size: 12px;
-    font-weight: bold;
-  }
-
+  .ach-checkbox-inner { display: none; color: #000; font-size: 12px; font-weight: bold; }
   .ach-card.completed .ach-checkbox-inner { display: block; }
 
   .ach-info { flex: 1; min-width: 0; }
@@ -362,7 +340,6 @@
   .tag-challenge { background: rgba(155,89,182,0.15); color: #bb8fce; border: 1px solid rgba(155,89,182,0.3); }
   .tag-dlc { background: rgba(46,204,113,0.15); color: #82e0aa; border: 1px solid rgba(46,204,113,0.3); }
 
-  /* TABLE STYLES */
   .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -389,7 +366,6 @@
   }
 
   .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-
   .data-table tr:last-child td { border-bottom: none; }
 
   .code-badge {
@@ -408,10 +384,7 @@
     color: var(--gold);
   }
 
-  /* SUBSECTION */
-  .subsection {
-    margin-bottom: 40px;
-  }
+  .subsection { margin-bottom: 40px; }
 
   .subsection-title {
     font-family: var(--display);
@@ -433,7 +406,6 @@
 
   .subsection-icon { font-size: 18px; }
 
-  /* BOSS CARDS */
   .boss-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
@@ -494,10 +466,7 @@
     white-space: nowrap;
   }
 
-  .boss-weak-value {
-    font-size: 13px;
-    color: var(--text);
-  }
+  .boss-weak-value { font-size: 13px; color: var(--text); }
 
   .boss-tips {
     list-style: none;
@@ -523,7 +492,6 @@
     top: 3px;
   }
 
-  /* KEYS */
   .keys-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -539,11 +507,7 @@
     align-items: flex-start;
   }
 
-  .key-symbol {
-    font-size: 36px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
+  .key-symbol { font-size: 36px; line-height: 1; flex-shrink: 0; }
 
   .key-name {
     font-family: var(--display);
@@ -561,13 +525,8 @@
     text-transform: uppercase;
   }
 
-  .key-location {
-    font-size: 12px;
-    color: #aaa;
-    line-height: 1.5;
-  }
+  .key-location { font-size: 12px; color: #aaa; line-height: 1.5; }
 
-  /* FILM ROLLS */
   .film-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -609,11 +568,7 @@
     padding-top: 2px;
   }
 
-  .film-row-value {
-    font-size: 13px;
-    color: #aaa;
-    line-height: 1.5;
-  }
+  .film-row-value { font-size: 13px; color: #aaa; line-height: 1.5; }
 
   .film-reward {
     margin-top: 12px;
@@ -625,7 +580,6 @@
     color: var(--gold);
   }
 
-  /* MEDALLIONS */
   .medallion-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -660,13 +614,8 @@
     text-transform: uppercase;
   }
 
-  .scenario-value {
-    font-size: 13px;
-    color: #aaa;
-    margin-bottom: 10px;
-  }
+  .scenario-value { font-size: 13px; color: #aaa; margin-bottom: 10px; }
 
-  /* MR RACCOON LIST */
   .raccoon-list {
     display: flex;
     flex-direction: column;
@@ -681,15 +630,6 @@
     grid-template-columns: 36px 1fr auto;
     gap: 12px;
     align-items: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .raccoon-item:hover { background: var(--surface2); }
-
-  .raccoon-item.found {
-    background: rgba(46,204,113,0.04);
-    border-color: rgba(46,204,113,0.2);
   }
 
   .raccoon-num {
@@ -699,8 +639,6 @@
     text-align: center;
   }
 
-  .raccoon-item.found .raccoon-num { color: var(--green); }
-
   .raccoon-loc {
     font-family: var(--display);
     font-size: 15px;
@@ -708,11 +646,7 @@
     margin-bottom: 2px;
   }
 
-  .raccoon-desc {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.4;
-  }
+  .raccoon-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
   .raccoon-excl {
     font-family: var(--mono);
@@ -721,7 +655,6 @@
     white-space: nowrap;
   }
 
-  /* NOTES */
   .notes-section-title {
     font-family: var(--display);
     font-size: 18px;
@@ -748,25 +681,12 @@
     gap: 8px 16px;
     align-items: center;
     font-size: 13px;
-    cursor: pointer;
-    transition: background 0.15s;
   }
 
-  .note-item:hover { background: var(--surface2); }
-  .note-item.read { opacity: 0.5; }
-  .note-item.read .note-num { color: var(--green); }
-
-  .note-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    text-align: right;
-  }
-
+  .note-num { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; }
   .note-name { color: var(--text); }
   .note-loc { color: var(--muted); font-size: 12px; }
 
-  /* SAFETY DEPOSIT */
   .deposit-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -791,13 +711,8 @@
     margin-bottom: 6px;
   }
 
-  .deposit-reward {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gold);
-  }
+  .deposit-reward { font-family: var(--mono); font-size: 11px; color: var(--gold); }
 
-  /* RESET */
   .reset-btn {
     font-family: var(--mono);
     font-size: 11px;
@@ -825,7 +740,6 @@
 
   .tip-box strong { color: var(--red); font-family: var(--mono); font-size: 11px; letter-spacing: 2px; }
 
-  /* STEAM SYNC */
   .steam-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -894,17 +808,8 @@
     margin-left: auto;
   }
 
-  .steam-avatar {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #4a90d9;
-  }
-
-  .steam-name {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: #4a90d9;
-  }
+  .steam-avatar { width: 32px; height: 32px; border: 1px solid #4a90d9; }
+  .steam-name { font-family: var(--mono); font-size: 12px; color: #4a90d9; }
 
   .steam-disconnect {
     font-family: var(--mono);
@@ -940,7 +845,6 @@
   .steam-help a { color: #4a90d9; text-decoration: none; }
   .steam-help a:hover { text-decoration: underline; }
 
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); }
@@ -963,7 +867,7 @@
 
 <div class="steam-bar" id="steamBar">
   <span class="steam-label">🎮 STEAM SYNC</span>
-  <input class="steam-input" id="steamInput" type="text" placeholder="full Steam URL" />
+  <input class="steam-input" id="steamInput" type="text" placeholder="Steam vanity URL or 64-bit Steam ID" />
   <button class="steam-btn" id="steamSyncBtn" onclick="syncSteam()">SYNC ACHIEVEMENTS</button>
   <span class="steam-status" id="steamStatus"></span>
   <div class="steam-profile" id="steamProfile" style="display:none">
@@ -976,7 +880,7 @@
 <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 32px;">
   <div class="steam-help">
     ⚠ Your Steam profile must be set to <strong style="color:var(--text)">Public</strong> for syncing to work. &nbsp;·&nbsp;
-    Enter your <strong style="color:var(--text)">vanity URL</strong> (e.g. <em>belleke</em> from steamcommunity.com/id/<em>belleke</em>) or your
+    Enter your <strong style="color:var(--text)">vanity URL</strong> (e.g. <em>belleke</em>) or your
     <strong style="color:var(--text)">64-bit Steam ID</strong> (find it at <a href="https://steamid.io" target="_blank">steamid.io</a>). &nbsp;·&nbsp;
     To set profile public: <strong style="color:var(--text)">Steam → Profile → Edit Profile → Privacy Settings → Game Details → Public</strong>
   </div>
@@ -984,20 +888,19 @@
 
 <div class="container">
   <div class="tabs">
-    <button class="tab active" onclick="showTab('achievements')">ACHIEVEMENTS</button>
-    <button class="tab" onclick="showTab('safes')">SAFES & LOCKS</button>
-    <button class="tab" onclick="showTab('raccoons')">MR. RACCOONS</button>
-    <button class="tab" onclick="showTab('bosses')">BOSS FIGHTS</button>
-    <button class="tab" onclick="showTab('notes')">FILES & NOTES</button>
-    <button class="tab" onclick="showTab('keys')">KEY ITEMS</button>
-    <button class="tab" onclick="showTab('film')">FILM ROLLS</button>
+    <button class="tab active" onclick="showTab('achievements', event)">ACHIEVEMENTS</button>
+    <button class="tab" onclick="showTab('safes', event)">SAFES & LOCKS</button>
+    <button class="tab" onclick="showTab('raccoons', event)">MR. RACCOONS</button>
+    <button class="tab" onclick="showTab('bosses', event)">BOSS FIGHTS</button>
+    <button class="tab" onclick="showTab('notes', event)">FILES & NOTES</button>
+    <button class="tab" onclick="showTab('keys', event)">KEY ITEMS</button>
+    <button class="tab" onclick="showTab('film', event)">FILM ROLLS</button>
   </div>
 
   <!-- ACHIEVEMENTS -->
   <div class="section active" id="sec-achievements">
     <div class="section-title">ALL ACHIEVEMENTS</div>
     <div class="section-desc">// CLICK AN ACHIEVEMENT TO MARK AS COMPLETED · PROGRESS IS SAVED LOCALLY //</div>
-
     <div class="ach-filters">
       <button class="filter-btn active" onclick="filterAch('all', this)">ALL (44)</button>
       <button class="filter-btn" onclick="filterAch('story', this)">STORY</button>
@@ -1009,7 +912,6 @@
       <button class="filter-btn" onclick="filterAch('incomplete', this)">INCOMPLETE</button>
       <input class="search-box" type="text" placeholder="Search..." oninput="searchAch(this.value)">
     </div>
-
     <div class="ach-grid" id="achGrid"></div>
   </div>
 
@@ -1080,24 +982,18 @@
       <div class="medallion-grid">
         <div class="medallion-card">
           <div class="medallion-name">🦁 Lion</div>
-          <div class="scenario-label">Scenario A</div>
-          <div class="scenario-value">Lion · Leafy Branch · Bird</div>
-          <div class="scenario-label">Scenario B</div>
-          <div class="scenario-value">Crown · Torch · Bird</div>
+          <div class="scenario-label">Scenario A</div><div class="scenario-value">Lion · Leafy Branch · Bird</div>
+          <div class="scenario-label">Scenario B</div><div class="scenario-value">Crown · Torch · Bird</div>
         </div>
         <div class="medallion-card">
           <div class="medallion-name">🦄 Unicorn</div>
-          <div class="scenario-label">Scenario A</div>
-          <div class="scenario-value">Fish · Scorpion · Vase</div>
-          <div class="scenario-label">Scenario B</div>
-          <div class="scenario-value">Two People · Scales · Snake</div>
+          <div class="scenario-label">Scenario A</div><div class="scenario-value">Fish · Scorpion · Vase</div>
+          <div class="scenario-label">Scenario B</div><div class="scenario-value">Two People · Scales · Snake</div>
         </div>
         <div class="medallion-card">
           <div class="medallion-name">👩 Maiden</div>
-          <div class="scenario-label">Scenario A</div>
-          <div class="scenario-value">Woman · Bow · Snake</div>
-          <div class="scenario-label">Scenario B</div>
-          <div class="scenario-value">Ram · Harp · Bird</div>
+          <div class="scenario-label">Scenario A</div><div class="scenario-value">Woman · Bow · Snake</div>
+          <div class="scenario-label">Scenario B</div><div class="scenario-value">Ram · Harp · Bird</div>
         </div>
       </div>
     </div>
@@ -1118,10 +1014,8 @@
   <!-- MR RACCOONS -->
   <div class="section" id="sec-raccoons">
     <div class="section-title">MR. RACCOON LOCATIONS</div>
-    <div class="section-desc">// 15 TOTAL · CLICK TO MARK AS FOUND · REWARD: INFINITE COMBAT KNIFE //</div>
-
+    <div class="section-desc">// 15 TOTAL · REWARD: INFINITE COMBAT KNIFE //</div>
     <div class="tip-box"><strong>ACHIEVEMENTS</strong> — Destroy 1 for "Vermin Extermination" · Destroy all 15 for "Complete Vermin Extermination" + Infinite Combat Knife</div>
-
     <div class="notes-section-title">LEON A / B STORY</div>
     <div class="raccoon-list" id="raccoonList"></div>
   </div>
@@ -1136,7 +1030,7 @@
   <!-- NOTES -->
   <div class="section" id="sec-notes">
     <div class="section-title">FILES & NOTES</div>
-    <div class="section-desc">// 58 TOTAL · CLICK TO MARK AS READ · REQUIRED FOR "LORE EXPLORER" //</div>
+    <div class="section-desc">// 58 TOTAL · REQUIRED FOR "LORE EXPLORER" //</div>
     <div id="notesContainer"></div>
   </div>
 
@@ -1316,15 +1210,9 @@ const films = [
 
 // ---- STATE ----
 let completed = JSON.parse(localStorage.getItem('re2_ach') || '[]');
-let foundRaccoons = JSON.parse(localStorage.getItem('re2_raccoons') || '[]');
-let readNotes = JSON.parse(localStorage.getItem('re2_notes') || '[]');
-let activeFilter = 'all';
-let searchTerm = '';
 
 function save() {
   localStorage.setItem('re2_ach', JSON.stringify(completed));
-  localStorage.setItem('re2_raccoons', JSON.stringify(foundRaccoons));
-  localStorage.setItem('re2_notes', JSON.stringify(readNotes));
 }
 
 // ---- RENDER ----
@@ -1374,6 +1262,9 @@ function renderProgress() {
   document.getElementById('progressNum').textContent = count;
 }
 
+let activeFilter = 'all';
+let searchTerm = '';
+
 function toggleAch(id) {
   if(completed.includes(id)) completed = completed.filter(x => x !== id);
   else completed.push(id);
@@ -1397,11 +1288,10 @@ function searchAch(val) {
 function renderRaccoons() {
   const list = document.getElementById('raccoonList');
   list.innerHTML = raccoons.map(r => {
-    const found = foundRaccoons.includes(r.id);
     const exclClass = r.color === 'leon' ? 'tag-leon' : r.color === 'claire' ? 'tag-claire' : 'tag-both';
     const exclLabel = r.excl === 'B ONLY' ? 'B SCENARIO' : r.excl;
-    return `<div class="raccoon-item ${found?'found':''}" onclick="toggleRaccoon(${r.id})">
-      <div class="raccoon-num">${found ? '✓' : r.id}</div>
+    return `<div class="raccoon-item">
+      <div class="raccoon-num">${r.id}</div>
       <div>
         <div class="raccoon-loc">${r.loc}</div>
         <div class="raccoon-desc">${r.desc}</div>
@@ -1409,13 +1299,6 @@ function renderRaccoons() {
       <span class="raccoon-excl tag ${exclClass}">${exclLabel}</span>
     </div>`;
   }).join('');
-}
-
-function toggleRaccoon(id) {
-  if(foundRaccoons.includes(id)) foundRaccoons = foundRaccoons.filter(x => x !== id);
-  else foundRaccoons.push(id);
-  save();
-  renderRaccoons();
 }
 
 function renderBosses() {
@@ -1442,7 +1325,7 @@ function renderNotes() {
     <div class="notes-section-title">${group.group}</div>
     <div class="notes-list">
       ${group.items.map(n => `
-        <div class="note-item ${readNotes.includes(n.n)?'read':''}" onclick="toggleNote(${n.n})">
+        <div class="note-item">
           <span class="note-num">#${n.n}</span>
           <span class="note-name">${n.name}</span>
           <span class="note-loc">${n.loc}</span>
@@ -1450,13 +1333,6 @@ function renderNotes() {
       `).join('')}
     </div>
   `).join('');
-}
-
-function toggleNote(n) {
-  if(readNotes.includes(n)) readNotes = readNotes.filter(x => x !== n);
-  else readNotes.push(n);
-  save();
-  renderNotes();
 }
 
 function renderKeys() {
@@ -1489,78 +1365,29 @@ function renderFilm() {
   `).join('');
 }
 
-function showTab(name) {
+function showTab(name, e) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('sec-' + name).classList.add('active');
-  event.target.classList.add('active');
+  e.target.classList.add('active');
 }
 
 function resetProgress() {
   if(confirm('Reset all progress? This cannot be undone.')) {
-    completed = []; foundRaccoons = []; readNotes = [];
+    completed = [];
     save();
     renderAchievements();
     renderProgress();
-    renderRaccoons();
-    renderNotes();
     disconnectSteam();
   }
 }
 
-// ---- STEAM ACHIEVEMENT API NAME MAPPING ----
-// Names confirmed from live Steam XML (new_achievement_1_X format)
-// Order matches the Steam XML output order seen in console
-const steamAchMap = {
-  'new_achievement_1_1':  1,  // Welcome to the City of the Dead
-  'new_achievement_1_2':  2,  // Path to the Goddess
-  'new_achievement_1_3':  3,  // Never-Ending Rain
-  'new_achievement_1_4':  4,  // Hack Complete
-  'new_achievement_1_5':  5,  // Hide and Seek
-  'new_achievement_1_6':  6,  // A Great Need for a Shower
-  'new_achievement_1_7':  7,  // A Hero Emerges
-  'new_achievement_1_8':  8,  // A Heroine Emerges
-  'new_achievement_1_10': 9,  // Broken Umbrella
-  'new_achievement_1_11': 10, // The Basics of Survival
-  'new_achievement_1_12': 11, // Hip to Add Squares
-  'new_achievement_1_13': 12, // Customizer
-  'new_achievement_1_14': 13, // Don't Need No Stinkin' Gun
-  'new_achievement_1_15': 14, // Eat This!
-  'new_achievement_1_16': 15, // That'll Hold 'Em
-  'new_achievement_1_17': 16, // Vermin Extermination
-  'new_achievement_1_18': 17, // A Vault-like Mind
-  'new_achievement_1_19': 18, // First Break-In
-  'new_achievement_1_21': 19, // Bon Appétit
-  'new_achievement_1_22': 20, // Zombie Roundup
-  'new_achievement_1_23': 21, // Like Skeet Shooting
-  'new_achievement_1_26': 22, // Keep Their Heads Ringin'
-  'new_achievement_1_28': 23, // Hats Off!
-  'new_achievement_1_32': 24, // Gotcha!
-  'new_achievement_1_44': 25, // Treasure Hunter
-  'new_achievement_1_9':  26, // A Waist of Space
-  'new_achievement_1_20': 27, // One Slick Super-spy
-  'new_achievement_1_24': 28, // Young Escapee
-  'new_achievement_1_25': 29, // In the Blink of an Eye
-  'new_achievement_1_27': 30, // With Time to Spare
-  'new_achievement_1_29': 31, // Lore Explorer
-  'new_achievement_1_30': 32, // Complete Vermin Extermination
-  'new_achievement_1_31': 33, // Master of Unlocking
-  'new_achievement_1_33': 34, // Leon "S." Kennedy
-  'new_achievement_1_34': 35, // Sizzling Scarlet Hero
-  'new_achievement_1_35': 36, // Hardcore Rookie
-  'new_achievement_1_36': 37, // Hardcore College Student
-  'new_achievement_1_37': 38, // Frugalist
-  'new_achievement_1_38': 39, // Minimalist
-  'new_achievement_1_39': 40, // A Small Carbon Footprint
-  'new_achievement_1_40': 41, // Chasing Jill
-  'new_achievement_1_41': 42, // Grim Reaper
-  'new_achievement_1_42': 43, // Got 'Em
-  'new_achievement_1_43': 44, // Hell of a Sheriff
-};
+// ---- STEAM SYNC ----
+// Uses achievement DISPLAY NAMES from Steam XML to match against our achievements array.
+// This is reliable because Steam's display name == achievement name in our data.
 
 const RE2_APPID = 883710;
 
-// Multiple CORS proxies — tried in order until one works
 const CORS_PROXIES = [
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
@@ -1574,7 +1401,6 @@ async function fetchWithProxy(targetUrl) {
       const proxyUrl = CORS_PROXIES[i](targetUrl);
       const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
       if (!res.ok) continue;
-      // allorigins wraps response in JSON
       if (proxyUrl.includes('allorigins')) {
         const json = await res.json();
         return json.contents;
@@ -1582,7 +1408,6 @@ async function fetchWithProxy(targetUrl) {
       return await res.text();
     } catch(e) {
       console.warn(`Proxy ${i+1} failed:`, e);
-      continue;
     }
   }
   throw new Error('All proxies failed');
@@ -1592,9 +1417,7 @@ async function syncSteam() {
   let input = document.getElementById('steamInput').value.trim();
   if (!input) { setStatus('error', '✕ Please enter a Steam vanity URL or Steam ID'); return; }
 
-  // Auto-strip full URLs — accept both:
-  // https://steamcommunity.com/id/belleke/  → belleke
-  // https://steamcommunity.com/profiles/76561198393944242/ → 76561198393944242
+  // Strip full URLs
   if (input.includes('steamcommunity.com/id/')) {
     input = input.split('steamcommunity.com/id/')[1].replace(/\//g, '').trim();
   } else if (input.includes('steamcommunity.com/profiles/')) {
@@ -1626,43 +1449,49 @@ async function syncSteam() {
       btn.disabled = false; return;
     }
 
-    const playerName = (xml.querySelector('steamID')?.textContent || 
+    const playerName = (xml.querySelector('steamID')?.textContent ||
                         xml.querySelector('playername')?.textContent || 'Unknown').replace(/\[CDATA\[|\]\]/g, '').trim();
     const avatarUrl = (xml.querySelector('avatarIcon')?.textContent || '').replace(/\[CDATA\[|\]\]/g, '').trim();
     const achNodes = xml.querySelectorAll('achievement');
-
-    console.log('Player:', playerName);
-    console.log('Achievements found:', achNodes.length);
-    if (achNodes.length > 0) {
-      // Log first achievement to see the XML structure
-      console.log('First achievement XML:', achNodes[0].outerHTML);
-    }
 
     if (achNodes.length === 0) {
       setStatus('error', '✕ No achievement data found. Make sure RE2 is in your library and profile is Public.');
       btn.disabled = false; return;
     }
 
+    // BUILD A LOOKUP MAP: lowercase display name → achievement id
+    // This is the fix — we match by name, not by internal API number
+    const nameToId = {};
+    achievements.forEach(a => {
+      nameToId[a.name.toLowerCase()] = a.id;
+    });
+
     let newCount = 0;
     achNodes.forEach(node => {
-      // Try multiple possible attribute/element names for the API name and closed status
-      const apiName = node.querySelector('apiname')?.textContent ||
-                      node.getAttribute('apiname') ||
-                      node.querySelector('name')?.textContent ||
-                      node.getAttribute('name') || '';
+      // Get closed status (whether the achievement is unlocked)
       const closedEl = node.querySelector('closed')?.textContent;
       const closedAttr = node.getAttribute('closed');
-      const closed = closedEl || closedAttr || '0';
+      const closed = (closedEl || closedAttr || '0').trim();
 
-      console.log(`ACH: ${apiName} | closed: ${closed}`);
+      if (closed !== '1' && closed !== 'true') return; // not unlocked, skip
 
-      if (apiName && (closed === '1' || closed === 'true')) {
-        const achId = steamAchMap[apiName];
-        if (achId && !completed.includes(achId)) { completed.push(achId); newCount++; }
+      // Get the display name from Steam XML
+      const steamDisplayName = (
+        node.querySelector('name')?.textContent ||
+        node.getAttribute('name') || ''
+      ).replace(/\[CDATA\[|\]\]/g, '').trim().toLowerCase();
+
+      // Match by name against our achievements array
+      const achId = nameToId[steamDisplayName];
+      if (achId && !completed.includes(achId)) {
+        completed.push(achId);
+        newCount++;
       }
     });
 
-    save(); renderAchievements(); renderProgress();
+    save();
+    renderAchievements();
+    renderProgress();
     showSteamProfile(playerName, avatarUrl);
     setStatus('success', `✓ SYNCED — ${newCount} new achievements imported (${completed.length}/44 total)`);
 
@@ -1674,7 +1503,6 @@ async function syncSteam() {
 }
 
 async function resolveVanityUrl(vanity) {
-  // Try all proxies for the vanity URL profile XML
   for (let i = 0; i < CORS_PROXIES.length; i++) {
     try {
       setStatus('loading', `⟳ RESOLVING PROFILE (proxy ${i+1}/${CORS_PROXIES.length})...`);
@@ -1694,7 +1522,6 @@ async function resolveVanityUrl(vanity) {
       if (steamId && /^\d{17}$/.test(steamId)) return steamId;
     } catch(e) {
       console.warn(`Vanity proxy ${i+1} failed:`, e);
-      continue;
     }
   }
   return null;
@@ -1713,39 +1540,17 @@ function showSteamProfile(name, avatar) {
   document.getElementById('steamInput').style.display = 'none';
   const btn = document.getElementById('steamSyncBtn');
   btn.textContent = 'RE-SYNC';
-  btn.style.display = '';
 }
 
 function disconnectSteam() {
-  ['re2_steamid','re2_steamname','re2_steamavatar'].forEach(k => localStorage.removeItem(k));
   document.getElementById('steamProfile').style.display = 'none';
   document.getElementById('steamInput').style.display = '';
   document.getElementById('steamInput').value = '';
-  const btn = document.getElementById('steamSyncBtn');
-  btn.textContent = 'SYNC ACHIEVEMENTS';
-  btn.style.display = '';
+  document.getElementById('steamSyncBtn').textContent = 'SYNC ACHIEVEMENTS';
   setStatus('', '');
 }
 
-function restoreSteamSession() {
-  const savedId = localStorage.getItem('re2_steamid');
-  const savedName = localStorage.getItem('re2_steamname');
-  const savedAvatar = localStorage.getItem('re2_steamavatar');
-  if (savedId && savedName) {
-    document.getElementById('steamInput').value = savedId;
-    showSteamProfile(savedName, savedAvatar);
-    setStatus('success', `✓ Previously synced as ${savedName} — click RE-SYNC to update`);
-  }
-}
-
 // INIT
-// Clear any stored Steam session — always start fresh
-localStorage.removeItem('re2_steamid');
-localStorage.removeItem('re2_steamname');
-localStorage.removeItem('re2_steamavatar');
-// Also clear synced achievements so only manual progress is kept
-completed = [];
-save();
 renderAchievements();
 renderProgress();
 renderRaccoons();
