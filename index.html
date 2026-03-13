@@ -825,6 +825,121 @@
 
   .tip-box strong { color: var(--red); font-family: var(--mono); font-size: 11px; letter-spacing: 2px; }
 
+  /* STEAM SYNC */
+  .steam-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .steam-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  .steam-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 14px;
+    outline: none;
+    width: 260px;
+    transition: border-color 0.2s;
+  }
+
+  .steam-input:focus { border-color: #4a90d9; }
+  .steam-input::placeholder { color: var(--muted); }
+
+  .steam-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 18px;
+    background: #1b2838;
+    border: 1px solid #4a90d9;
+    color: #4a90d9;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .steam-btn:hover { background: #4a90d9; color: #fff; }
+  .steam-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .steam-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 4px 0;
+  }
+
+  .steam-status.loading { color: var(--gold); }
+  .steam-status.success { color: var(--green); }
+  .steam-status.error { color: var(--red); }
+
+  .steam-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .steam-avatar {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #4a90d9;
+  }
+
+  .steam-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #4a90d9;
+  }
+
+  .steam-disconnect {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+
+  .steam-disconnect:hover { color: var(--red); }
+
+  .steam-synced-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(74,144,217,0.15);
+    border: 1px solid rgba(74,144,217,0.3);
+    color: #4a90d9;
+    letter-spacing: 1px;
+  }
+
+  .steam-help {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .steam-help a { color: #4a90d9; text-decoration: none; }
+  .steam-help a:hover { text-decoration: underline; }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -845,6 +960,27 @@
     <button class="reset-btn" onclick="resetProgress()">RESET</button>
   </div>
 </header>
+
+<div class="steam-bar" id="steamBar">
+  <span class="steam-label">🎮 STEAM SYNC</span>
+  <input class="steam-input" id="steamInput" type="text" placeholder="Steam vanity URL or 64-bit Steam ID" />
+  <button class="steam-btn" id="steamSyncBtn" onclick="syncSteam()">SYNC ACHIEVEMENTS</button>
+  <span class="steam-status" id="steamStatus"></span>
+  <div class="steam-profile" id="steamProfile" style="display:none">
+    <img class="steam-avatar" id="steamAvatar" src="" alt="">
+    <span class="steam-name" id="steamPlayerName"></span>
+    <span class="steam-synced-badge">SYNCED</span>
+    <button class="steam-disconnect" onclick="disconnectSteam()">✕ DISCONNECT</button>
+  </div>
+</div>
+<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 32px;">
+  <div class="steam-help">
+    ⚠ Your Steam profile must be set to <strong style="color:var(--text)">Public</strong> for syncing to work. &nbsp;·&nbsp;
+    Enter your <strong style="color:var(--text)">vanity URL</strong> (e.g. <em>emmaoudhof</em> from steamcommunity.com/id/<em>emmaoudhof</em>) or your
+    <strong style="color:var(--text)">64-bit Steam ID</strong> (find it at <a href="https://steamid.io" target="_blank">steamid.io</a>). &nbsp;·&nbsp;
+    To set profile public: <strong style="color:var(--text)">Steam → Profile → Edit Profile → Privacy Settings → Game Details → Public</strong>
+  </div>
+</div>
 
 <div class="container">
   <div class="tabs">
@@ -1368,6 +1504,169 @@ function resetProgress() {
     renderProgress();
     renderRaccoons();
     renderNotes();
+    disconnectSteam();
+  }
+}
+
+// ---- STEAM ACHIEVEMENT API NAME MAPPING ----
+const steamAchMap = {
+  'ACH_STORY_ARRIVE_RPD': 1,
+  'ACH_STORY_GODDESS': 2,
+  'ACH_STORY_ESCAPE_RPD': 3,
+  'ACH_STORY_ADA': 4,
+  'ACH_STORY_SHERRY': 5,
+  'ACH_STORY_ESCAPE_SEWERS': 6,
+  'ACH_STORY_LEON_CLEAR': 7,
+  'ACH_STORY_CLAIRE_CLEAR': 8,
+  'ACH_STORY_TRUE_END': 9,
+  'ACH_MISC_COMBINE': 10,
+  'ACH_MISC_POUCH': 11,
+  'ACH_MISC_CUSTOMIZE': 12,
+  'ACH_MISC_KNIFE': 13,
+  'ACH_MISC_COUNTER': 14,
+  'ACH_MISC_BOARD': 15,
+  'ACH_COLLECT_RACCOON': 16,
+  'ACH_MISC_SAFE': 17,
+  'ACH_MISC_LOCKER': 18,
+  'ACH_MISC_GRENADE_MOUTH': 19,
+  'ACH_MISC_GRENADE_MULTI': 20,
+  'ACH_MISC_SHOOT_AIR': 21,
+  'ACH_MISC_FLASH': 22,
+  'ACH_MISC_TYRANT_HAT': 23,
+  'ACH_MISC_STAB_BOSS': 24,
+  'ACH_COLLECT_FILM': 25,
+  'ACH_MISC_ALL_POUCH': 26,
+  'ACH_MISC_ADA_ONLY': 27,
+  'ACH_MISC_SHERRY_ESCAPE': 28,
+  'ACH_MISC_LEON_BOSS': 29,
+  'ACH_MISC_CLAIRE_BOSS': 30,
+  'ACH_COLLECT_FILES': 31,
+  'ACH_COLLECT_ALL_RACCOON': 32,
+  'ACH_MISC_ALL_LOCK': 33,
+  'ACH_SCORE_LEON_S': 34,
+  'ACH_SCORE_CLAIRE_S': 35,
+  'ACH_CLEAR_LEON_HARD': 36,
+  'ACH_CLEAR_CLAIRE_HARD': 37,
+  'ACH_MISC_NO_HEAL': 38,
+  'ACH_MISC_NO_SAVE': 39,
+  'ACH_MISC_NO_WALK': 40,
+  'ACH_MISC_JILL': 41,
+  'ACH_HUNK_CLEAR': 42,
+  'ACH_GHOST_RACCOON': 43,
+  'ACH_GHOST_NOWAOUT': 44,
+};
+
+const RE2_APPID = 883710;
+const CORS_PROXY = 'https://corsproxy.io/?';
+
+async function syncSteam() {
+  const input = document.getElementById('steamInput').value.trim();
+  if (!input) { setStatus('error', '✕ Please enter a Steam vanity URL or Steam ID'); return; }
+
+  const btn = document.getElementById('steamSyncBtn');
+  btn.disabled = true;
+  setStatus('loading', '⟳ CONNECTING TO STEAM...');
+
+  try {
+    let steamId64 = /^\d{17}$/.test(input) ? input : await resolveVanityUrl(input);
+    if (!steamId64) {
+      setStatus('error', '✕ Could not find Steam profile. Check your vanity URL or ID.');
+      btn.disabled = false; return;
+    }
+
+    setStatus('loading', '⟳ FETCHING ACHIEVEMENTS...');
+    const statsUrl = `https://steamcommunity.com/profiles/${steamId64}/stats/${RE2_APPID}/achievements/?xml=1`;
+    const res = await fetch(CORS_PROXY + encodeURIComponent(statsUrl));
+    if (!res.ok) throw new Error('Fetch failed');
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+
+    const error = xml.querySelector('error');
+    if (error) {
+      const errText = error.textContent;
+      setStatus('error', errText.toLowerCase().includes('private')
+        ? '✕ Profile is private. Go to Steam → Profile → Edit Profile → Privacy Settings → set Game Details to Public.'
+        : `✕ Steam error: ${errText}`);
+      btn.disabled = false; return;
+    }
+
+    const playerName = xml.querySelector('steamID')?.textContent || 'Unknown';
+    const avatarUrl = xml.querySelector('avatarIcon')?.textContent || '';
+    const achNodes = xml.querySelectorAll('achievement');
+
+    if (achNodes.length === 0) {
+      setStatus('error', '✕ No achievement data found. Make sure RE2 is in your library and profile is public.');
+      btn.disabled = false; return;
+    }
+
+    let newCount = 0;
+    achNodes.forEach(node => {
+      const apiName = node.querySelector('apiname')?.textContent;
+      const closed = node.querySelector('closed')?.textContent;
+      if (apiName && closed === '1') {
+        const achId = steamAchMap[apiName];
+        if (achId && !completed.includes(achId)) { completed.push(achId); newCount++; }
+      }
+    });
+
+    save(); renderAchievements(); renderProgress();
+    localStorage.setItem('re2_steamid', steamId64);
+    localStorage.setItem('re2_steamname', playerName);
+    localStorage.setItem('re2_steamavatar', avatarUrl);
+    showSteamProfile(playerName, avatarUrl);
+    setStatus('success', `✓ SYNCED — ${newCount} new achievements imported (${completed.length}/44 total)`);
+
+  } catch(e) {
+    setStatus('error', '✕ Sync failed. Check your connection or try again later.');
+    console.error(e);
+  }
+  btn.disabled = false;
+}
+
+async function resolveVanityUrl(vanity) {
+  try {
+    const res = await fetch(CORS_PROXY + encodeURIComponent(`https://steamcommunity.com/id/${vanity}/?xml=1`));
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    return xml.querySelector('steamID64')?.textContent || null;
+  } catch { return null; }
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('steamStatus');
+  el.className = `steam-status ${type}`;
+  el.textContent = msg;
+}
+
+function showSteamProfile(name, avatar) {
+  document.getElementById('steamProfile').style.display = 'flex';
+  document.getElementById('steamPlayerName').textContent = name;
+  if (avatar) document.getElementById('steamAvatar').src = avatar;
+  document.getElementById('steamInput').style.display = 'none';
+  const btn = document.getElementById('steamSyncBtn');
+  btn.textContent = 'RE-SYNC';
+  btn.style.display = '';
+}
+
+function disconnectSteam() {
+  ['re2_steamid','re2_steamname','re2_steamavatar'].forEach(k => localStorage.removeItem(k));
+  document.getElementById('steamProfile').style.display = 'none';
+  document.getElementById('steamInput').style.display = '';
+  document.getElementById('steamInput').value = '';
+  const btn = document.getElementById('steamSyncBtn');
+  btn.textContent = 'SYNC ACHIEVEMENTS';
+  btn.style.display = '';
+  setStatus('', '');
+}
+
+function restoreSteamSession() {
+  const savedId = localStorage.getItem('re2_steamid');
+  const savedName = localStorage.getItem('re2_steamname');
+  const savedAvatar = localStorage.getItem('re2_steamavatar');
+  if (savedId && savedName) {
+    document.getElementById('steamInput').value = savedId;
+    showSteamProfile(savedName, savedAvatar);
+    setStatus('success', `✓ Previously synced as ${savedName} — click RE-SYNC to update`);
   }
 }
 
@@ -1379,6 +1678,7 @@ renderBosses();
 renderNotes();
 renderKeys();
 renderFilm();
+restoreSteamSession();
 </script>
 </body>
 </html>
