@@ -1615,9 +1615,19 @@ async function syncSteam() {
       btn.disabled = false; return;
     }
 
-    const playerName = xml.querySelector('steamID')?.textContent || 'Unknown';
-    const avatarUrl = xml.querySelector('avatarIcon')?.textContent || '';
+    const playerName = xml.querySelector('steamID')?.textContent || 
+                       xml.querySelector('playername')?.textContent ||
+                       xml.querySelector('playerName')?.textContent || 'Unknown';
+    const avatarUrl = xml.querySelector('avatarIcon')?.textContent || 
+                      xml.querySelector('avatar')?.textContent || '';
     const achNodes = xml.querySelectorAll('achievement');
+
+    console.log('Player:', playerName);
+    console.log('Achievements found:', achNodes.length);
+    if (achNodes.length > 0) {
+      // Log first achievement to see the XML structure
+      console.log('First achievement XML:', achNodes[0].outerHTML);
+    }
 
     if (achNodes.length === 0) {
       setStatus('error', '✕ No achievement data found. Make sure RE2 is in your library and profile is Public.');
@@ -1626,9 +1636,18 @@ async function syncSteam() {
 
     let newCount = 0;
     achNodes.forEach(node => {
-      const apiName = node.querySelector('apiname')?.textContent;
-      const closed = node.querySelector('closed')?.textContent;
-      if (apiName && closed === '1') {
+      // Try multiple possible attribute/element names for the API name and closed status
+      const apiName = node.querySelector('apiname')?.textContent ||
+                      node.getAttribute('apiname') ||
+                      node.querySelector('name')?.textContent ||
+                      node.getAttribute('name') || '';
+      const closedEl = node.querySelector('closed')?.textContent;
+      const closedAttr = node.getAttribute('closed');
+      const closed = closedEl || closedAttr || '0';
+
+      console.log(`ACH: ${apiName} | closed: ${closed}`);
+
+      if (apiName && (closed === '1' || closed === 'true')) {
         const achId = steamAchMap[apiName];
         if (achId && !completed.includes(achId)) { completed.push(achId); newCount++; }
       }
