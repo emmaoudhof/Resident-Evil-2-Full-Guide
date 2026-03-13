@@ -984,7 +984,7 @@
 
 <div class="container">
   <div class="tabs">
-    <button class="tab active" onclick="showTab('achievements')">ACHIEVEMENTSs</button>
+    <button class="tab active" onclick="showTab('achievements')">ACHIEVEMENTS</button>
     <button class="tab" onclick="showTab('safes')">SAFES & LOCKS</button>
     <button class="tab" onclick="showTab('raccoons')">MR. RACCOONS</button>
     <button class="tab" onclick="showTab('bosses')">BOSS FIGHTS</button>
@@ -1557,7 +1557,34 @@ const steamAchMap = {
 };
 
 const RE2_APPID = 883710;
-const CORS_PROXY = 'https://corsproxy.io/?';
+
+// Multiple CORS proxies — tried in order until one works
+const CORS_PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithProxy(targetUrl) {
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    try {
+      setStatus('loading', `⟳ TRYING PROXY ${i+1}/${CORS_PROXIES.length}...`);
+      const proxyUrl = CORS_PROXIES[i](targetUrl);
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      // allorigins wraps response in JSON
+      if (proxyUrl.includes('allorigins')) {
+        const json = await res.json();
+        return json.contents;
+      }
+      return await res.text();
+    } catch(e) {
+      console.warn(`Proxy ${i+1} failed:`, e);
+      continue;
+    }
+  }
+  throw new Error('All proxies failed');
+}
 
 async function syncSteam() {
   const input = document.getElementById('steamInput').value.trim();
@@ -1570,22 +1597,20 @@ async function syncSteam() {
   try {
     let steamId64 = /^\d{17}$/.test(input) ? input : await resolveVanityUrl(input);
     if (!steamId64) {
-      setStatus('error', '✕ Could not find Steam profile. Check your vanity URL or ID.');
+      setStatus('error', '✕ Could not find Steam profile. Check your vanity URL or Steam ID.');
       btn.disabled = false; return;
     }
 
     setStatus('loading', '⟳ FETCHING ACHIEVEMENTS...');
     const statsUrl = `https://steamcommunity.com/profiles/${steamId64}/stats/${RE2_APPID}/achievements/?xml=1`;
-    const res = await fetch(CORS_PROXY + encodeURIComponent(statsUrl));
-    if (!res.ok) throw new Error('Fetch failed');
-    const text = await res.text();
+    const text = await fetchWithProxy(statsUrl);
     const xml = new DOMParser().parseFromString(text, 'text/xml');
 
     const error = xml.querySelector('error');
     if (error) {
       const errText = error.textContent;
       setStatus('error', errText.toLowerCase().includes('private')
-        ? '✕ Profile is private. Go to Steam → Profile → Edit Profile → Privacy Settings → set Game Details to Public.'
+        ? '✕ Profile is private. Steam → Profile → Edit Profile → Privacy Settings → Game Details → Public.'
         : `✕ Steam error: ${errText}`);
       btn.disabled = false; return;
     }
@@ -1595,7 +1620,7 @@ async function syncSteam() {
     const achNodes = xml.querySelectorAll('achievement');
 
     if (achNodes.length === 0) {
-      setStatus('error', '✕ No achievement data found. Make sure RE2 is in your library and profile is public.');
+      setStatus('error', '✕ No achievement data found. Make sure RE2 is in your library and profile is Public.');
       btn.disabled = false; return;
     }
 
@@ -1617,7 +1642,7 @@ async function syncSteam() {
     setStatus('success', `✓ SYNCED — ${newCount} new achievements imported (${completed.length}/44 total)`);
 
   } catch(e) {
-    setStatus('error', '✕ Sync failed. Check your connection or try again later.');
+    setStatus('error', '✕ All sync methods failed. Make sure your profile is Public and try again.');
     console.error(e);
   }
   btn.disabled = false;
@@ -1625,8 +1650,7 @@ async function syncSteam() {
 
 async function resolveVanityUrl(vanity) {
   try {
-    const res = await fetch(CORS_PROXY + encodeURIComponent(`https://steamcommunity.com/id/${vanity}/?xml=1`));
-    const text = await res.text();
+    const text = await fetchWithProxy(`https://steamcommunity.com/id/${vanity}/?xml=1`);
     const xml = new DOMParser().parseFromString(text, 'text/xml');
     return xml.querySelector('steamID64')?.textContent || null;
   } catch { return null; }
